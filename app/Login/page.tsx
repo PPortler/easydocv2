@@ -62,7 +62,7 @@ function Login() {
                 icon: 'success',
                 confirmButtonText: 'ตกลง'
             })
-            router.replace('/MyFile')
+            router.replace('/myfile')
         } catch (err) {
             console.log(err);
         }
@@ -76,7 +76,7 @@ function Login() {
                     <Image className='w-full h-full' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
                 </div>
             </div>
-            <div className='w-7/12 bg-white shadow-xl rounded-lg min-h-screen flex justify-center items-center flex-col'>
+            <div className='w-7/12 bg-white shadow-xl rounded-3xl min-h-screen flex justify-center items-center flex-col'>
                 <div className='w-6/12'>
                     <h1 className='text-[#5955B3] text-3xl font-medium'>Login</h1>
                     <p className='mt-2 text-[#5955B3] font-light'>Login to access your travelwise  account</p>
@@ -114,7 +114,7 @@ function Login() {
                             <button className='bg-[#5955B3] text-white rounded-lg w-full p-2'>Login</button>
                         </div>
                         <div className='mt-5 text-center'>
-                            <p>Don’t have an account? <span><Link href="/Register" className='text-red-400'>Sign up</Link></span></p>
+                            <p>Don’t have an account? <span><Link href="/register" className='text-red-400'>Sign up</Link></span></p>
                         </div>
                         <div className='mt-10 text-xs relative flex flex-col items-center justify-center'>
                             <hr className='w-full' />

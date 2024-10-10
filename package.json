@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@firebase/storage": "^0.13.2",
     "@mdi/js": "^7.4.47",
     "@mdi/react": "^1.6.1",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "express": "^4.21.1",
+    "firebase": "^10.14.1",
     "mongoose": "^8.7.1",
     "next": "14.2.15",
     "next-auth": "^4.24.8",

@@ -77,7 +77,7 @@ function Register() {
                     <Image className='w-full h-full' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
                 </div>
             </div>
-            <div className='w-7/12 bg-white shadow-xl rounded-lg min-h-screen flex justify-center items-center flex-col'>
+            <div className='w-7/12 bg-white shadow-xl rounded-3xl min-h-screen flex justify-center items-center flex-col'>
                 <div className='w-6/12'>
                     <h1 className='text-[#5955B3] text-3xl font-medium'>Register</h1>
                     <p className='mt-2 text-[#5955B3] font-light'>Let’s get you all st up so you can access your personal account.</p>
@@ -150,7 +150,7 @@ function Register() {
                             <button type='submit' className='bg-[#5955B3] text-white rounded-lg w-full p-2'>Login</button>
                         </div>
                         <div className='mt-5 text-center'>
-                            <p>Already have an account?  <span><Link href="/Login" className='text-red-400'>Login</Link></span></p>
+                            <p>Already have an account?  <span><Link href="/login" className='text-red-400'>Login</Link></span></p>
                         </div>
                         <div className='mt-10 text-xs relative flex flex-col items-center justify-center'>
                             <hr className='w-full' />

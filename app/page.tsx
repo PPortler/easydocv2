@@ -11,7 +11,7 @@ import { mdiAccountSupervisor } from '@mdi/js';
 export default function Home() {
   return (
     <div className="p-5 ">
-      <div className="bg-white rounded-lg p-3 min-h-screen">
+      <div className="bg-white rounded-3xl p-3 min-h-screen">
         <Navbar />
         <div className="mt-10 flex justify-center items-center gap-72">
           <div className="flex flex-col gap-5 h-fit">

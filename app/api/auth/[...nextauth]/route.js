@@ -52,7 +52,7 @@ const authOption = {
         },
         async session({ session, token }) {
             if (token) {
-                session.user.id = token.id; 
+                session.user.idUser = token.id; 
             }
             return session;
         },
