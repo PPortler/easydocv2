@@ -28,8 +28,8 @@ function Navbar() {
                 </li>
             </ul>
             <div className="gap-5 flex items-center">
-                <Link href="#" className="">Login</Link>
-                <Link href="#" className="bg-[#5955B3] text-white py-2 px-4 rounded-lg">Sign up</Link>
+                <Link href="/Login" className="">Login</Link>
+                <Link href="/Register" className="bg-[#5955B3] text-white py-2 px-4 rounded-lg">Sign up</Link>
             </div>
         </nav>
     )

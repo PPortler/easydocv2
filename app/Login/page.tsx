@@ -1,0 +1,141 @@
+"use client"
+
+import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { useState } from 'react'
+import { signIn } from 'next-auth/react'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
+import Swal from 'sweetalert2'
+
+function Login() {
+
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [error, setError] =  useState<String>('')
+
+    const router = useRouter();
+
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+
+        try {
+            const res = await signIn("credentials", {
+                email, password, redirect: false
+            })
+            if (res && res.error) {
+                try {
+                    const resCheckUser = await fetch(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/checkuser`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ email })
+                    })
+
+                    if (!resCheckUser.ok) {
+                        throw new Error("Error fetch api checkuser.")
+                    }
+
+                    const { user } = await resCheckUser.json()
+
+                    if (user) {
+                        setError("รหัสผ่านของคุณไม่ถูกต้อง")
+                        return;
+                    } else {
+                        setError("อีเมลของคุณไม่ถูกต้อง");
+                        return;
+                    }
+
+
+                } catch (err) {
+                    console.log("Error Fetch Api in register: ", err)
+                }
+
+
+            }
+
+            Swal.fire({
+                title: 'เข้าสู่ระบบสำเร็จ',
+                text: 'ยินดีต้อนรับเข้าสู่ระบบ',
+                icon: 'success',
+                confirmButtonText: 'ตกลง'
+            })
+            router.replace('/MyFile')
+        } catch (err) {
+            console.log(err);
+        }
+
+    }
+    return (
+        <div className="p-5 flex justify-between">
+            <div className=' w-5/12'>
+                <Link href="/" className="text-white font-extrabold text-4xl">Easy Doc</Link>
+                <div className='flex justify-center items-center h-full p-24'>
+                    <Image className='w-full h-full' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
+                </div>
+            </div>
+            <div className='w-7/12 bg-white shadow-xl rounded-lg min-h-screen flex justify-center items-center flex-col'>
+                <div className='w-6/12'>
+                    <h1 className='text-[#5955B3] text-3xl font-medium'>Login</h1>
+                    <p className='mt-2 text-[#5955B3] font-light'>Login to access your travelwise  account</p>
+                    <form onSubmit={handleSubmit} className='mt-10'>
+                        <div className='relative '>
+                            <input
+                                className='w-full border border-black px-4 py-3 rounded-lg'
+                                type="email"
+                                placeholder='Enter your email'
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Email</p>
+                        </div>
+                        <div className='relative mt-5'>
+                            <input
+                                className='w-full border border-black px-4 py-3 rounded-lg'
+                                type="password"
+                                placeholder='Enter your password'
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Password</p>
+                        </div>
+                        {error && 
+                            <p className='text-red-500 mt-2'>{error}</p>
+                        } 
+                        
+                        <div className='mt-5 flex justify-between text-sm'>
+                            <div className='flex gap-2 items-center'>
+                                <input type="checkbox" />
+                                <p className=''>Remember me</p>
+                            </div>
+                            <Link href="/forgotAccount" className='text-red-400'>Forgot Password</Link>
+                        </div>
+                        <div className='mt-5'>
+                            <button className='bg-[#5955B3] text-white rounded-lg w-full p-2'>Login</button>
+                        </div>
+                        <div className='mt-5 text-center'>
+                            <p>Don’t have an account? <span><Link href="/Register" className='text-red-400'>Sign up</Link></span></p>
+                        </div>
+                        <div className='mt-10 text-xs relative flex flex-col items-center justify-center'>
+                            <hr className='w-full' />
+                            <p className='text-gray-400 px-1 bg-white absolute top-[-8px]'>Or login with</p>
+                        </div>
+                        <div className='mt-8 grid grid-cols-3 gap-3'>
+                            <div className='border rounded-lg p-2 flex justify-center px-10'>
+                                <Image className='w-7 h-7' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
+                            </div>
+                            <div className='border rounded-lg p-2 flex justify-center px-10'>
+                                <Image className='w-7 h-7' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
+                            </div>
+                            <div className='border rounded-lg p-2 flex justify-center px-10'>
+                                <Image className='w-7 h-7' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export default Login
