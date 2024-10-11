@@ -13,11 +13,21 @@ import Icon from '@mdi/react';
 import { mdiFileAccount, mdiDotsVertical, mdiArrowDown } from '@mdi/js';
 import AddFile from '../component/myfile/AddFile';
 import axios from 'axios';
+import Loader from '../component/Loader';
+
+interface File {
+    fileName: string;
+    fileType: string;
+    fileURL: string;
+}
+
 
 function MyFile() {
 
     const { status, data: session } = useSession();
     const router = useRouter();
+
+    const [loader, setLoader] = useState<boolean>(true);
 
     useEffect(() => {
         if (status === 'loading') {
@@ -25,15 +35,17 @@ function MyFile() {
         }
         if (!session) {
             router.replace('/login')
+            setLoader(false);
         }
 
         if (session?.user?.idUser) {
             getFiles(session?.user?.idUser);
+            setLoader(false);
         }
     }, [session])
 
     //get files
-    const [files, setFiles] = useState<String[]>([])
+    const [files, setFiles] = useState<File[]>([])
     async function getFiles(id: String) {
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/upload/${id}`);
@@ -43,11 +55,9 @@ function MyFile() {
         }
     }
 
-    console.log(files);
-
     return (
         <div className="p-5 flex">
-            <Navbar />
+            <Navbar status = "myfile" />
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
                 <Navbar2 title="My File" />
 
@@ -71,7 +81,7 @@ function MyFile() {
                 <div className=' mt-10 grid grid-cols-4 p-10 border rounded-3xl gap-5'>
                     {files ? (
                         files.map((file, index) => (
-                            <div className='justify-between items-center flex border rounded-xl p-4 bg-gray-100'>
+                            <div key={index} className='justify-between items-center flex border rounded-xl p-4 bg-gray-100'>
                                 <div className='flex gap-3 text-ellipsis overflow-hidden whitespace-nowrap'>
                                     <Icon path={mdiFileAccount} size={1} className='flex-shrink-0'/>
                                     <p className=' text-ellipsis overflow-hidden whitespace-nowrap'>{file.fileName}</p>
@@ -86,7 +96,12 @@ function MyFile() {
 
                 </div>
             </div>
-            <AddFile email={session?.user?.email} id={session?.user?.idUser} />
+            {loader && (
+                <div>
+                    <Loader/>
+                </div>
+            )}
+            <AddFile email={`${session?.user?.email}`} id={`${session?.user?.idUser}`} />
         </div>
     )
 }

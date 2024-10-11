@@ -7,11 +7,14 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from '@/app/firebaseConfig';
 import axios from 'axios';
 import Swal from 'sweetalert2'
-
+import Loader from '../Loader';
+import { useState } from 'react';
 
   const AddFile = ({ email, id }:{email:String, id:String}) => {
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+    const [loader, setLoader] = useState<boolean>(false);
 
     // ฟังก์ชันเปิด file dialog
     const handleClick = () => {
@@ -22,6 +25,7 @@ import Swal from 'sweetalert2'
 
     // ฟังก์ชันจัดการไฟล์อัปโหลด
     const handleFileUpload = async () => {
+        setLoader(true);
         const file = fileInputRef.current?.files?.[0];
         if (file) {
             // แยกชื่อไฟล์และสกุลไฟล์
@@ -40,6 +44,7 @@ import Swal from 'sweetalert2'
                 (error) => {
                     // จัดการ error
                     console.error('Upload failed:', error);
+                    setLoader(false);
                 },
                 async () => {
                     // อัปโหลดเสร็จสมบูรณ์
@@ -67,6 +72,7 @@ import Swal from 'sweetalert2'
                             console.log('File data uploaded to server:', res.data);
                         }
                     } catch (err) {
+                        setLoader(false);
                         console.error('Error uploading file or sending data to server:', err);
                     }
                 }
@@ -87,6 +93,11 @@ import Swal from 'sweetalert2'
                 hidden
                 onChange={handleFileUpload}  // เรียก handleFileUpload เมื่อเลือกไฟล์
             />
+            {loader && (
+                <div>
+                    <Loader/>
+                </div>
+            )}
         </div>
     );
 }

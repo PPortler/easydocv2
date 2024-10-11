@@ -7,7 +7,6 @@ import Navbar from "./component/main/Navbar";
 import Icon from '@mdi/react';
 import { mdiAccountSupervisor } from '@mdi/js';
 
-
 export default function Home() {
   return (
     <div className="p-5 ">

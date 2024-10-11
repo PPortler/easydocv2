@@ -8,18 +8,21 @@ import { signIn } from 'next-auth/react'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
+import Loader from '../component/Loader'
 
 function Login() {
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [error, setError] =  useState<String>('')
+    const [error, setError] = useState<String>('')
+
+    const [loader, setLoader] = useState<boolean>(false);
 
     const router = useRouter();
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
+        setLoader(true);
         try {
             const res = await signIn("credentials", {
                 email, password, redirect: false
@@ -36,21 +39,25 @@ function Login() {
 
                     if (!resCheckUser.ok) {
                         throw new Error("Error fetch api checkuser.")
+                        setLoader(false);
                     }
 
                     const { user } = await resCheckUser.json()
 
                     if (user) {
                         setError("รหัสผ่านของคุณไม่ถูกต้อง")
+                        setLoader(false);
                         return;
                     } else {
                         setError("อีเมลของคุณไม่ถูกต้อง");
+                        setLoader(false);
                         return;
                     }
 
 
                 } catch (err) {
                     console.log("Error Fetch Api in register: ", err)
+                    setLoader(false);
                 }
 
 
@@ -73,7 +80,7 @@ function Login() {
             <div className=' w-5/12'>
                 <Link href="/" className="text-white font-extrabold text-4xl">Easy Doc</Link>
                 <div className='flex justify-center items-center h-full p-24'>
-                    <Image className='w-full h-full' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
+                    <Image className='w-96 h-96' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
                 </div>
             </div>
             <div className='w-7/12 bg-white shadow-xl rounded-3xl min-h-screen flex justify-center items-center flex-col'>
@@ -99,10 +106,10 @@ function Login() {
                             />
                             <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Password</p>
                         </div>
-                        {error && 
+                        {error &&
                             <p className='text-red-500 mt-2'>{error}</p>
-                        } 
-                        
+                        }
+
                         <div className='mt-5 flex justify-between text-sm'>
                             <div className='flex gap-2 items-center'>
                                 <input type="checkbox" />
@@ -134,6 +141,11 @@ function Login() {
                     </form>
                 </div>
             </div>
+            {loader && (
+                <div>
+                    <Loader />
+                </div>
+            )}
         </div>
     )
 }

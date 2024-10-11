@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation'
-
+import Loader from '../component/Loader'
 
 function Register() {
 
@@ -18,11 +18,14 @@ function Register() {
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
 
+    const [loader, setLoader] = useState<boolean>(false);
+
     const router = useRouter();
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-    
+        
+        setLoader(true);
         // Log ข้อมูลฟอร์ม
         console.log({
             firstName,
@@ -53,6 +56,7 @@ function Register() {
                     router.replace('/Login'); // ไปยังหน้า login
                 });
             } else {
+                setLoader(false)
                 Swal.fire({
                     icon: 'error',
                     title: 'ข้อผิดพลาด',
@@ -61,6 +65,7 @@ function Register() {
             }
         } catch (err) {
             console.error("มีข้อผิดพลาดเกิดขึ้น:", err);
+            setLoader(false)
             Swal.fire({
                 icon: 'error',
                 title: 'ข้อผิดพลาด',
@@ -74,7 +79,7 @@ function Register() {
             <div className=' w-5/12'>
                 <Link href="/" className="text-white font-extrabold text-4xl">Easy Doc</Link>
                 <div className='flex justify-center items-center h-full p-24'>
-                    <Image className='w-full h-full' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
+                    <Image className='w-96 h-96' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
                 </div>
             </div>
             <div className='w-7/12 bg-white shadow-xl rounded-3xl min-h-screen flex justify-center items-center flex-col'>
@@ -170,6 +175,11 @@ function Register() {
                     </form>
                 </div>
             </div>
+            {loader && (
+                <div>
+                    <Loader />
+                </div>
+            )}
         </div>
     )
 }
