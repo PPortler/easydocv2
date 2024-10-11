@@ -16,7 +16,7 @@ export default function Home() {
           <div className="flex flex-col gap-5 h-fit">
             <h1 className="text-5xl font-bold">Document </h1>
             <h1 className="text-5xl font-bold">Management </h1>
-            <Link href="#" className="bg-[#5955B3] w-fit text-white py-3 px-6 rounded-lg">Register</Link>
+            <Link href="register" className="bg-[#5955B3] w-fit text-white py-3 px-6 rounded-lg">Register</Link>
           </div>
           <Image className="w-96 h-96" src="/image/main/poster.png" height={1000} width={1000} priority alt="poster"></Image>
         </div>
