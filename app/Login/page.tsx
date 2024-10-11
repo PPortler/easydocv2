@@ -65,7 +65,6 @@ function Login() {
 
             Swal.fire({
                 title: 'เข้าสู่ระบบสำเร็จ',
-                text: 'ยินดีต้อนรับเข้าสู่ระบบ',
                 icon: 'success',
                 confirmButtonText: 'ตกลง'
             })
