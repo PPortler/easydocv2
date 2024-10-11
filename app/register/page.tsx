@@ -53,7 +53,7 @@ function Register() {
                     title: 'สำเร็จ',
                     text: 'ลงทะเบียนสำเร็จ!',
                 }).then(() => {
-                    router.replace('/Login'); // ไปยังหน้า login
+                    router.replace('/login'); // ไปยังหน้า login
                 });
             } else {
                 setLoader(false)
