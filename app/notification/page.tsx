@@ -16,7 +16,7 @@ function Notification() {
             <Navbar status="none"/>
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
                 <Navbar2 title="Notificatiion" />
-                <div className='flex flex-col gap-5 items-center mt-10'>
+                <div className='flex flex-col gap-2 items-center mt-10'>
                     <div className='bg-[#F6FAFC] flex p-3 justify-between items-center w-8/12'>
                         <div className='flex gap-5'>
                             <Icon path={mdiAccountCircle} size={2} />

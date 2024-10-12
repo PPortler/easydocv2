@@ -37,10 +37,10 @@ function Navbar({ status }: { status: string }) {
                 </div>
             </div>
             <div>
-                <div className='border-s-4 border-[#5955B3] hover:border-white flex cursor-pointer gap-3 py-3 px-4 hover:bg-[#5852a5]'>
+                <Link href="/setting" className={`${status === "setting" ? "bg-[#5852a5] border-s-4 border-white":""} border-s-4 border-[#5955B3] hover:border-white flex cursor-pointer gap-3 py-3 px-4 hover:bg-[#5852a5]`}>
                     <Icon path={mdiCog} size={1} />
                     <p>Setting</p>
-                </div>
+                </Link>
             </div>
         </div>
     )
