@@ -17,6 +17,7 @@ function Register() {
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [role, setRole] = useState<string>('');
 
     const [loader, setLoader] = useState<boolean>(false);
 
@@ -24,9 +25,8 @@ function Register() {
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        
+
         setLoader(true);
-        // Log ข้อมูลฟอร์ม
         console.log({
             firstName,
             lastName,
@@ -34,19 +34,21 @@ function Register() {
             phoneNumber,
             password,
             confirmPassword,
+            role,
         });
-    
+
         const bodyForm = {
             firstName,
             lastName,
             email,
             phoneNumber,
             password,
+            role,
         };
-    
+
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/users`, bodyForm);
-    
+
             if (res.status === 201) {
                 Swal.fire({
                     icon: 'success',
@@ -109,13 +111,15 @@ function Register() {
                         </div>
                         <div className='flex gap-5 mt-5'>
                             <div className='relative w-full '>
-                                <input
-                                    className='w-full border border-black px-4 py-3 rounded-lg'
-                                    type="text"
-                                    placeholder='Enter your email'
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                                <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Email</p>
+                                <select
+                                    className='w-full appearance-none border border-black px-4 py-3 rounded-lg'
+                                    onChange={(e) => setRole(e.target.value)}
+                                >
+                                    <option value="0">-</option>
+                                    <option value="Student">Student</option>
+                                    <option value="Teacher">Teacher</option>
+                                </select>
+                                <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Role</p>
                             </div>
                             <div className='relative w-full '>
                                 <input
@@ -126,6 +130,15 @@ function Register() {
                                 />
                                 <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Phone Number</p>
                             </div>
+                        </div>
+                        <div className='relative mt-5 '>
+                            <input
+                                className='w-full border border-black px-4 py-3 rounded-lg'
+                                type="text"
+                                placeholder='Enter your email'
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Email</p>
                         </div>
                         <div className='relative mt-5'>
                             <input
