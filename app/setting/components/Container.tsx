@@ -6,6 +6,7 @@ import Icon from '@mdi/react';
 import { mdiPencilOutline } from '@mdi/js';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import PulseLoader from "react-spinners/PulseLoader";
 
 interface dataUser {
     firstName: string;
@@ -18,6 +19,8 @@ interface dataUser {
 function Container({ idUser }: { idUser: string }) {
 
     const [isHoverProfile, setIsHoverProfile] = useState<boolean>(false);
+
+    const [loader, setLoader] = useState<boolean>(true);
 
     //get dataUser
     const [dataUser, setDataUser] = useState<dataUser>()
@@ -47,8 +50,8 @@ function Container({ idUser }: { idUser: string }) {
 
     console.log(dataUser);
     return (
-        <div className='w-full'>
-            {dataUser && (
+        <div className='w-full relative'>
+            {dataUser ? (
                 <div className='flex flex-col gap-5'>
                     <div className='border p-5 rounded-xl flex justify-between'>
                         <div className='flex items-center gap-3'>
@@ -126,6 +129,16 @@ function Container({ idUser }: { idUser: string }) {
                         </button>
                     </div>
                 </div>
+            ) : (
+            <div className='w-full h-full absolute top-0 left-0 flex justify-center items-center opacity-50'>
+                <PulseLoader
+                    size={10}
+                    aria-label="Loading Spinner"
+                    color={`#5955B3`}
+                    className='z-10' 
+                    speedMultiplier={1}
+                />
+            </div>
             )}
         </div >
     )

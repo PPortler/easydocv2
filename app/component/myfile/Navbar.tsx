@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Icon from '@mdi/react';
-import { mdiCog, mdiImageMultiple, mdiNearMe, mdiInvoiceTextClockOutline, mdiListStatus, mdiMessageProcessingOutline } from '@mdi/js';
+import { mdiMailboxOutline,mdiCog, mdiImageMultiple, mdiNearMe, mdiInvoiceTextClockOutline, mdiListStatus, mdiMessageProcessingOutline } from '@mdi/js';
 import Link from 'next/link';
 
 function Navbar({ status }: { status: string }) {
@@ -16,6 +16,10 @@ function Navbar({ status }: { status: string }) {
                     <Link href="myfile" className={`${status === "myfile" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiImageMultiple} size={1} />
                         <p>My File</p>
+                    </Link>
+                    <Link href="mailbox" className={`${status === "mailbox" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
+                        <Icon path={mdiMailboxOutline} size={1} />
+                        <p>MailBox</p>
                     </Link>
                     <Link href="sent" className={`${status === "sent" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiNearMe} size={1} />

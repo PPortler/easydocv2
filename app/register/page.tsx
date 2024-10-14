@@ -112,7 +112,7 @@ function Register() {
                         <div className='flex gap-5 mt-5'>
                             <div className='relative w-full '>
                                 <select
-                                    className='w-full appearance-none border border-black px-4 py-3 rounded-lg'
+                                    className='w-full appearance-none border bg-white border-black px-4 py-3 rounded-lg'
                                     onChange={(e) => setRole(e.target.value)}
                                 >
                                     <option value="0">-</option>
