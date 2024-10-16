@@ -10,7 +10,7 @@ import Swal from 'sweetalert2'
 import Loader from '../Loader';
 import { useState } from 'react';
 
-  const AddFile = ({ email, id }:{email:String, id:String}) => {
+const AddFile = ({ email, id }: { email: String, id: String }) => {
 
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -29,8 +29,8 @@ import { useState } from 'react';
         const file = fileInputRef.current?.files?.[0];
         if (file) {
             // แยกชื่อไฟล์และสกุลไฟล์
-            const fileName = file.name.substring(0, file.name.lastIndexOf('.')); 
-            const fileType = file.name.split('.').pop(); 
+            const fileName = file.name.substring(0, file.name.lastIndexOf('.'));
+            const fileType = file.name.split('.').pop();
 
             const storageRef = ref(storage, `Users/Files/${email}/${file.name}`); // ระบุ path ใน storage
             const uploadTask = uploadBytesResumable(storageRef, file);
@@ -59,11 +59,11 @@ import { useState } from 'react';
                                 fileURL: fileURL
                             });
 
-                            if(res.status === 200 || res.status === 201){
+                            if (res.status === 200 || res.status === 201) {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'สำเร็จ',
-                                    text: `อัพโหลดไฟล์ ${fileName} สำเร็จ` ,
+                                    text: `อัพโหลดไฟล์ ${fileName} สำเร็จ`,
                                 }).then(() => {
                                     window.location.reload();
                                 });
@@ -95,7 +95,7 @@ import { useState } from 'react';
             />
             {loader && (
                 <div>
-                    <Loader/>
+                    <Loader />
                 </div>
             )}
         </div>

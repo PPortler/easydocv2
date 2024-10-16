@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 function Navbar() {
     return (
-        <nav className="flex bg-[#F5F7FA] p-3 px-10 justify-between items-center">
+        <nav className="flex bg-[#F5F7FA] p-3 px-10 justify-between items-center rounded-xl">
             <h1 className="font-extrabold text-xl">Easy Doc</h1>
             <ul className="flex gap-5">
                 <li>

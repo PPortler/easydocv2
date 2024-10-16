@@ -7,6 +7,7 @@ import { useState } from 'react'
 import Loader from '../component/Loader'
 import Icon from '@mdi/react';
 import { mdiAccountCircle } from '@mdi/js';
+import TableMailbox from './components/TableMailbox'
 
 function MailBox() {
 
@@ -16,9 +17,9 @@ function MailBox() {
         <div className="p-5 flex">
             <Navbar status="mailbox"/>
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
-                <Navbar2 title="Box" />
-                <div className='flex flex-col gap-5 items-center mt-10'>
-            
+                <Navbar2 title="MailBox" />
+                <div className='mt-10'>
+                    <TableMailbox />
                 </div>
 
             </div>

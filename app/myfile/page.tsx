@@ -2,11 +2,8 @@
 
 import React from 'react'
 import { useSession } from 'next-auth/react'
-import { signOut } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
 import Navbar from '../component/myfile/Navbar';
 import Navbar2 from '../component/myfile/Navbar2';
 import Icon from '@mdi/react';
@@ -20,7 +17,6 @@ interface File {
     fileType: string;
     fileURL: string;
 }
-
 
 function MyFile() {
 
@@ -88,7 +84,6 @@ function MyFile() {
                                 </div>
                                 <Icon path={mdiDotsVertical} size={1} className='flex-shrink-0'/>
                             </div>
-
                         ))
                     ) : (
                         <p>No files available</p>
