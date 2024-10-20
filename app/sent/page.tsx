@@ -13,7 +13,7 @@ function Sent() {
 
     const router = useRouter();
     const { data: session, status } = useSession();
-    const [loader, setLoader] = useState<boolean>();
+    const [loader, setLoader] = useState<boolean>(false);
 
     useEffect(() => {
         if (status === 'loading') {
@@ -33,7 +33,7 @@ function Sent() {
             <Navbar status="sent" />
             <div className=" bg-white rounded-3xl p-10 min-h-screen w-full">
                 <Navbar2 title="Sent Files" />
-                <FormSent />
+                <FormSent setLoader={setLoader} />
             </div>
             {loader && (
                 <div>

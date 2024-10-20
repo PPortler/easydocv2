@@ -31,8 +31,9 @@ export async function GET(req) {
             header: sent.header,
             type: sent.type,
             detail: sent.detail,
+            status: sent.status,
+            date: sent.createdAt,
             from: sent.from,
-            date: sent.date
         }));
 
         // ส่งผลลัพธ์กลับไป

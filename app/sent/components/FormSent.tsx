@@ -27,7 +27,11 @@ interface File {
     fileURL: string;
 }
 
-function FormSent() {
+interface FormSentProps {
+    setLoader: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+function FormSent({ setLoader }: FormSentProps) {
 
     const [email, setEmail] = useState<string[]>([]);
     const [files, setFiles] = useState<File[]>([]);
@@ -131,8 +135,6 @@ function FormSent() {
         }
     };
 
-
-
     //delete file in upload
     const handleDeleteFile = (index: number) => {
         setFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
@@ -142,17 +144,25 @@ function FormSent() {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        console.log("files: " + files);
+        setLoader(true);
 
+        console.log("files: " + files);
         console.log("header: " + header);
         console.log("type: " + type);
         console.log("detail: " + detail);
         console.log("from: " + fromEmail);
 
         if (email.length === 0 || files.length === 0 || !header || !type || !detail) {
-            setError("กรุณากรอกข้อมูลให้ครบทุกช่อง")
+            setError("กรุณากรอกข้อมูลให้ครบทุกช่อง");
+            setLoader(false);
             return;
         }
+        if (email.some(e => e === fromEmail)) {
+            setError("ไม่สามารถส่งอีเมลเดียวกันกับผู้ใช้");
+            setLoader(false);
+            return;
+        }
+
         let checkStatus = false;
         try {
             // ใช้ for...of เพื่อส่ง email ทีละค่า
@@ -164,16 +174,29 @@ function FormSent() {
                     header: header,
                     type: type,
                     detail: detail,
+                    status: "validate",
                     fromEmail: fromEmail
-                });
+                }
+                );
 
                 if (res.status === 201 || res.status === 200) {
-                    checkStatus = true;
+                    const sentId = res.data.id;
+
+                    await axios.post(
+                        `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/mailBox`, { // ใช้ sentId
+                        email: e,
+                        idSent: sentId,
+                    }
+                    ).then(() => {
+                        checkStatus = true;
+                    });
+
                 }
                 console.log("email " + e);
             }
         } catch (err) {
             console.error("เกิดข้อผิดพลาดในการส่งอีเมล:", err);
+            setLoader(false);
         }
 
         if (checkStatus) {
@@ -181,10 +204,14 @@ function FormSent() {
                 icon: 'success',
                 title: 'ส่งไฟล์สำเร็จ!',
             }).then(() => {
+                setLoader(false);
                 window.location.reload();
             });
+        } else {
+            setLoader(false); // ให้โหลดหายถ้าไม่สำเร็จ
         }
     }
+
 
     return (
         <div>

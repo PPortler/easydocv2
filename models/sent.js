@@ -12,6 +12,7 @@ const SentSchema = new mongoose.Schema({
     header: { type: String },
     type: { type: String },
     detail: { type: String },
+    status: { type: String },
     from: { type: [String] },
 },
     {
