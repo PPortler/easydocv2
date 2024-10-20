@@ -7,9 +7,10 @@ import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import PulseLoader from "react-spinners/PulseLoader";
 import Select from 'react-select';
-import { ref, uploadBytes } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import { storage } from '@/app/firebaseConfig';
 import Image from 'next/image';
+import Swal from 'sweetalert2';
 
 interface AllEmail {
     value: string;
@@ -37,8 +38,16 @@ function FormSent() {
 
     const { data: session } = useSession();
 
+    const [fromEmail, setFromEmail] = useState<string>('');
     useEffect(() => {
         getAllUser();
+
+        const email = session?.user?.email;
+
+        if (email) {
+            setFromEmail(email);
+        }
+
     }, [session])
 
     const [allUser, setAllUser] = useState<User[]>([]);
@@ -67,29 +76,62 @@ function FormSent() {
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFiles = event.target.files;
         if (selectedFiles) {
-            const newFilesArray = Array.from(selectedFiles).map(file => ({
-                fileName: file.name,
-                fileType: file.type,
-                fileURL: '', // คุณสามารถอัปเดต URL นี้หลังจากที่การอัปโหลดเสร็จสิ้น
-            }));
-
-            // อัปเดตสถานะให้รวมไฟล์ที่มีอยู่และไฟล์ใหม่
-            setFiles(prevFiles => [...prevFiles, ...newFilesArray]);
             uploadFiles(selectedFiles); // เรียกใช้งานฟังก์ชันการอัปโหลด
         }
     };
 
+    const [uploadProgress, setUploadProgress] = useState<number>(0)
     const uploadFiles = async (selectedFiles: FileList) => {
         for (const file of Array.from(selectedFiles)) {
-            const fileRef = ref(storage, `Users/Sent/${session?.user?.email}/${file.name}`); // Specify the path in Firebase Storage
-            try {
-                await uploadBytes(fileRef, file);
-                console.log(`Uploaded ${file.name} successfully.`);
-            } catch (error) {
-                console.error(`Error uploading ${file.name}: `, error);
+            // ดึงชื่อไฟล์โดยไม่รวมส่วนขยาย
+            const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
+
+            // ดึงประเภทไฟล์จากส่วนขยาย
+            const fileType = file.name.split('.').pop();
+
+            // ตรวจสอบประเภทไฟล์
+            if (fileType !== "pdf" && fileType !== "docx") {
+                setError("อัพโหลดเฉพาะไฟล์ pdf, docx เท่านั้น!");
+                return;
             }
+
+            const fileRef = ref(storage, `Users/Sent/${session?.user?.email}/${file.name}`);
+
+            // ใช้ uploadBytesResumable เพื่อสามารถติดตามการอัปโหลดได้
+            const uploadTask = uploadBytesResumable(fileRef, file);
+
+            // ฟังการเปลี่ยนแปลงของสถานะการอัปโหลด
+            uploadTask.on("state_changed",
+                (snapshot) => {
+                    const progress = Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100); // ปัดเศษลงเป็นจำนวนเต็ม
+                    console.log(`Upload is ${progress}% done`);
+                    setUploadProgress(progress); // อัปเดตเปอร์เซ็นต์ใน UI
+                },
+                (error) => {
+                    console.error(`Error uploading ${file.name}: `, error);
+                    setError("เกิดข้อผิดพลาดในการอัปโหลดไฟล์");
+                },
+                async () => {
+                    // อัปโหลดเสร็จสิ้น
+                    const downloadURL = await getDownloadURL(fileRef);
+                    console.log(`Uploaded ${file.name} successfully. Download URL: ${downloadURL}`);
+
+                    // อัปเดตไฟล์ในสถานะ
+                    setFiles(prevFiles => [
+                        ...prevFiles,
+                        {
+                            fileName: fileNameWithoutExtension,
+                            fileType: fileType,
+                            fileURL: downloadURL,
+                        },
+                    ]);
+                    setUploadProgress(0);
+                }
+            );
         }
     };
+
+
 
     //delete file in upload
     const handleDeleteFile = (index: number) => {
@@ -100,17 +142,48 @@ function FormSent() {
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        console.log("email: "+ email);
-        console.log("files: "+ files);
-        console.log("header: "+ header);
-        console.log("type: "+ type);
-        console.log("detail: "+ detail);
+        console.log("files: " + files);
 
-        if(email.length === 0 || files.length === 0 || !header || !type || !detail){
+        console.log("header: " + header);
+        console.log("type: " + type);
+        console.log("detail: " + detail);
+        console.log("from: " + fromEmail);
+
+        if (email.length === 0 || files.length === 0 || !header || !type || !detail) {
             setError("กรุณากรอกข้อมูลให้ครบทุกช่อง")
             return;
         }
+        let checkStatus = false;
+        try {
+            // ใช้ for...of เพื่อส่ง email ทีละค่า
+            for (const e of email) {
+                const res = await axios.post(
+                    `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/sent`, {
+                    email: e,
+                    files: files,
+                    header: header,
+                    type: type,
+                    detail: detail,
+                    fromEmail: fromEmail
+                });
 
+                if (res.status === 201 || res.status === 200) {
+                    checkStatus = true;
+                }
+                console.log("email " + e);
+            }
+        } catch (err) {
+            console.error("เกิดข้อผิดพลาดในการส่งอีเมล:", err);
+        }
+
+        if (checkStatus) {
+            Swal.fire({
+                icon: 'success',
+                title: 'ส่งไฟล์สำเร็จ!',
+            }).then(() => {
+                window.location.reload();
+            });
+        }
     }
 
     return (
@@ -139,29 +212,46 @@ function FormSent() {
                                 <input id="upload" type="file" hidden multiple onChange={handleFileChange} />
                                 <label htmlFor="upload" className='cursor-pointer'>
                                     <p className='text-gray-500 font-medium'>Upload your files here</p>
-                                    <div className={`mt-2 p-5 w-full h-full bg-gray-100 ${files.length > 0 ? "grid grid-cols-5 gap-3" : "flex flex-col"} justify-center items-center rounded-xl shadow border-4 border-dotted`}>
-                                        {files.length > 0 ? (
-                                            files.map((file, index) => (
-                                                <div key={index} className='text-center relative'>
-                                                    <div
-                                                        className='absolute top-0 right-0 cursor-pointer'
-                                                        onMouseDown={(e) => {
-                                                            e.preventDefault();
-                                                            e.stopPropagation();
-                                                            handleDeleteFile(index);
-                                                        }}>
-                                                        <Icon path={mdiCloseCircle} size={1} className='text-red-500 ' />
-                                                    </div>
-                                                    <Image className='w-full h-full' src="/image/documents/docx.png" height={1000} width={1000} priority alt={file.fileType} />
-                                                    <p className='text-ellipsis whitespace-nowrap overflow-hidden'>{file.fileName}</p>
+                                    <div className={`mt-2 p-5 w-full h-full bg-gray-100 ${files.length > 0 ? "" : "flex flex-col"} justify-center items-center rounded-xl shadow border-4 border-dotted`}>
+                                        {uploadProgress > 0 ? (
+                                            <div className='flex flex-col items-center opacity-50 gap-2'>
+                                                <div className='flex justify-center items-center '>
+                                                    <PulseLoader
+                                                        size={10}
+                                                        aria-label="Loading Spinner"
+                                                        color={`#5955B3`}
+                                                        className='z-10'
+                                                        speedMultiplier={1}
+                                                    />
                                                 </div>
-                                            ))
+                                                <div className='text-xs'>{uploadProgress}%</div>
+                                            </div>
                                         ) : (
-                                            <>
-                                                <Icon path={mdiAccountCircle} size={1} className='text-gray-400' />
-                                                <h1 className='font-medium'>Click to upload</h1>
-                                                <p className='text-gray-400 text-sm'>Drag and drop files here</p>
-                                            </>
+                                            files.length > 0 ? (
+                                                files.map((file, index) => (
+                                                    <div key={index}>
+                                                        <div className={`${index > 0 ? "mt-3" : ""} relative flex gap-3 items-center p-3 rounded-lg bg-gray-200 shadow`}>
+                                                            <div
+                                                                className='absolute top-0 right-0 cursor-pointer m-2'
+                                                                onMouseDown={(e) => {
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                    handleDeleteFile(index);
+                                                                }}>
+                                                                <Icon path={mdiCloseCircle} size={1} className='text-red-500 ' />
+                                                            </div>
+                                                            <Image className='w-10 h-10 ' src="/image/documents/docx.png" height={1000} width={1000} priority alt={file.fileType} />
+                                                            <p className='text-ellipsis whitespace-nowrap overflow-hidden w-4/5'>{file.fileName}</p>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <>
+                                                    <Icon path={mdiAccountCircle} size={1} className='text-gray-400' />
+                                                    <h1 className='font-medium'>Click to upload</h1>
+                                                    <p className='text-gray-400 text-sm'>Drag and drop files here</p>
+                                                </>
+                                            )
                                         )}
                                     </div>
                                 </label>

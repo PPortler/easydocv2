@@ -15,14 +15,14 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
 interface Column {
-    id: 'teacher' | 'status' | 'files' | 'date' | 'detail';
+    id: 'user' | 'status' | 'files' | 'date' | 'detail';
     label: string;
     minWidth?: number;
     align?: 'right';
     format?: (value: number) => string;
 }
 const columns: readonly Column[] = [
-    { id: 'teacher', label: 'Teacher', minWidth: 170 },
+    { id: 'user', label: 'user', minWidth: 170 },
     { id: 'status', label: 'Status', minWidth: 100 },
     { id: 'files', label: 'Files', minWidth: 170 },
     { id: 'date', label: 'Date', minWidth: 170 },
@@ -30,7 +30,7 @@ const columns: readonly Column[] = [
 ];
 
 interface Data {
-    teacher: { name: string; description: string };
+    user: { name: string; description: string };
     status: string;
     files: string;
     date: string;
@@ -38,25 +38,25 @@ interface Data {
 }
 
 function createData(
-    teacher: { name: string; description: string },
+    user: { name: string; description: string },
     status: string,
     files: string,
     date: string,
     detail: string
 ): Data {
-    return { teacher, status, files, date, detail };
+    return { user, status, files, date, detail };
 }
 
 const rows = [
     createData(
-        { name: 'Teacher1', description: 'Senior Lecturer in Physics' },
+        { name: 'User1', description: 'Senior Lecturer in Physics' },
         'Agreen',
         "Document1",
         "17/06/2024",
         ""
     ),
     createData(
-        { name: 'Teacher1', description: 'Senior Lecturer in Physics' },
+        { name: 'User2', description: 'Senior Lecturer in Physics' },
         'Agreen',
         "Document1",
         "17/06/2024",
@@ -103,7 +103,7 @@ function TableStatus() {
                                         {columns.map((column) => {
                                             const value = row[column.id as keyof Data];
 
-                                            if (column.id === 'teacher' && typeof value === 'object' && value !== null) {
+                                            if (column.id === 'user' && typeof value === 'object' && value !== null) {
                                                 const teacher = value as { name: string; description: string };
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>

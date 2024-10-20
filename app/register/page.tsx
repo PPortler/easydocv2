@@ -17,7 +17,6 @@ function Register() {
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
-    const [role, setRole] = useState<string>('');
 
     const [loader, setLoader] = useState<boolean>(false);
 
@@ -34,7 +33,6 @@ function Register() {
             phoneNumber,
             password,
             confirmPassword,
-            role,
         });
 
         const bodyForm = {
@@ -43,7 +41,6 @@ function Register() {
             email,
             phoneNumber,
             password,
-            role,
         };
 
         try {
@@ -110,7 +107,7 @@ function Register() {
                             </div>
                         </div>
                         <div className='flex gap-5 mt-5'>
-                            <div className='relative w-full '>
+                            {/* <div className='relative w-full '>
                                 <select
                                     className='w-full appearance-none border bg-white border-black px-4 py-3 rounded-lg'
                                     onChange={(e) => setRole(e.target.value)}
@@ -120,7 +117,7 @@ function Register() {
                                     <option value="Teacher">Teacher</option>
                                 </select>
                                 <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Role</p>
-                            </div>
+                            </div> */}
                             <div className='relative w-full '>
                                 <input
                                     className='w-full border border-black px-4 py-3 rounded-lg'

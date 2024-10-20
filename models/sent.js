@@ -12,7 +12,12 @@ const SentSchema = new mongoose.Schema({
     header: { type: String },
     type: { type: String },
     detail: { type: String },
-});
+    from: { type: [String] },
+},
+    {
+        timestamps: true
+    }
+);
 
 const Sents = mongoose.models.Sents || mongoose.model('Sents', SentSchema);
 

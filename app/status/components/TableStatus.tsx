@@ -3,8 +3,9 @@
 import React from 'react'
 import Icon from '@mdi/react';
 import { mdiAccountCircle, mdiStar, mdiArrowLeftCircle } from '@mdi/js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Timeline from './Timeline';
+import axios from 'axios';
 
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -16,14 +17,14 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
 interface Column {
-    id: 'teacher' | 'status' | 'files' | 'date' | 'detail';
+    id: 'user' | 'status' | 'files' | 'date' | 'detail';
     label: string;
     minWidth?: number;
     align?: 'right';
     format?: (value: number) => string;
 }
 const columns: readonly Column[] = [
-    { id: 'teacher', label: 'Teacher', minWidth: 170 },
+    { id: 'user', label: 'User', minWidth: 170 },
     { id: 'status', label: 'Status', minWidth: 100 },
     { id: 'files', label: 'Files', minWidth: 170 },
     { id: 'date', label: 'Date', minWidth: 170 },
@@ -31,41 +32,74 @@ const columns: readonly Column[] = [
 ];
 
 interface Data {
-    teacher: { name: string; description: string };
+    user: { email: string; description: string },
     status: string;
-    files: string;
+    files: string,  
     date: string;
     detail: string;
 }
 
+interface Sents {
+    files: [{ fileName: string, fileType: string, fileURL: string }];
+    email: string;
+    header: string;
+    detail: string;
+    from: [string];
+}
+
 function createData(
-    teacher: { name: string; description: string },
+    user: { email: string; description: string },
     status: string,
-    files: string,
+    files: string, 
     date: string,
     detail: string
 ): Data {
-    return { teacher, status, files, date, detail };
+    return { user, status, files, date, detail };
 }
 
-const rows = [
-    createData(
-        { name: 'Teacher1', description: 'Senior Lecturer in Physics' },
-        'Agreen',
-        "Document1",
-        "17/06/2024",
-        ""
-    ),
-    createData(
-        { name: 'Teacher1', description: 'Senior Lecturer in Physics' },
-        'Agreen',
-        "Document1",
-        "17/06/2024",
-        ""
-    ),
-];
 
-function TableStatus() {
+function TableStatus({ email }: { email: string }) {
+
+    //get all sent
+    const [allSent, setAllsent] = useState<Sents[]>([]);
+
+    useEffect(() => {
+        if (email) {
+            getSents(email)
+        }
+    }, [email])
+
+    console.log(allSent);
+    async function getSents(email: string) {
+
+        try {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/sent/status/${email}`);
+
+            if (res.status === 200) {
+                setAllsent(res.data);
+            } else {
+                console.log('Error get dataUser');
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const rows = allSent.map((sent) => {
+        // ตรวจสอบว่า sent.files เป็นอาร์เรย์
+        const fileNames: string[] = Array.isArray(sent.files) 
+            ? sent.files.map(file => file.fileName) // เก็บชื่อไฟล์ในอาร์เรย์
+            : []; // ใช้อาร์เรย์ว่างถ้าไม่ใช่อาร์เรย์
+    
+        return createData(
+            { email: sent.email, description: sent.header },
+            'Agreen',
+            fileNames.join(', '), // เข้าร่วมชื่อไฟล์เป็น string
+            "17/06/2024",
+            ""
+        );
+    });
+
 
     const [timeLine, setTimeLine] = useState<String>();
 
@@ -121,94 +155,6 @@ function TableStatus() {
                 </div>
             </div>
         ) : (
-            // <table className=" w-full table-fixed">
-            //     <thead className="">
-            //         <tr className='border-b-2 border-gray-400'>
-            //             <th className="p-3">
-            //                 <div className="">
-            //                     <p>Teacher</p>
-            //                 </div >
-            //             </th >
-            //             <th className="">Status</th>
-            //             <th className="">Files</th>
-            //             <th className="">Date</th>
-            //             <th className="">Detail</th>
-            //         </tr >
-            //     </thead >
-            //     <tbody>
-            //         <tr className=' border-b-2 border-gray-400'>
-            //             <td className="p-3">
-            //                 <div className="flex gap-2 items-center ">
-            //                     <Icon path={mdiAccountCircle} size={2.5} />
-            //                     <div className=' '>
-            //                         <h1>Teacher1</h1>
-            //                         <p className="text-gray-400 ">I neglected to mention that</p>
-            //                     </div>
-            //                 </div>
-            //             </td>
-            //             <td className="">
-            //                 <div className="  flex justify-center items-center">
-            //                     <div className='py-1 px-4 rounded-2xl bg-[#D4F8D3]'>
-            //                         <h1>Agree</h1>
-            //                     </div>
-            //                 </div>
-            //             </td>
-            //             <td className="">
-            //                 <div className='text-center'>
-            //                     <p>Document 1</p>
-            //                 </div>
-            //             </td>
-            //             <td className="">
-            //                 <div className='text-center'>
-            //                     <p>17/06/2024</p>
-            //                 </div>
-            //             </td>
-            //             <td onClick={() => setTimeLine('test')} className="cursor-pointer">
-            //                 <div className='flex justify-center items-center'>
-            //                     <div className="py-1 px-3 rounded-md bg-[#FFF0BB]">
-            //                         <Icon path={mdiStar} size={1} className="text-[#FFAC33]" />
-            //                     </div>
-            //                 </div>
-            //             </td>
-            //         </tr>
-            //         <tr className='border-b-2 border-gray-400'>
-            //             <td className="p-3">
-            //                 <div className="flex gap-2 items-center ">
-            //                     <Icon path={mdiAccountCircle} size={2.5} />
-            //                     <div className=' '>
-            //                         <h1>Teacher1</h1>
-            //                         <p className="text-gray-400 ">I neglected to mention that</p>
-            //                     </div>
-            //                 </div>
-            //             </td>
-            //             <td className="">
-            //                 <div className="  flex justify-center items-center">
-            //                     <div className='py-1 px-4 rounded-2xl bg-[#D4F8D3]'>
-            //                         <h1>Agree</h1>
-            //                     </div>
-            //                 </div>
-            //             </td>
-            //             <td className="">
-            //                 <div className='text-center'>
-            //                     <p>Document 1</p>
-            //                 </div>
-            //             </td>
-            //             <td className="">
-            //                 <div className='text-center'>
-            //                     <p>17/06/2024</p>
-            //                 </div>
-            //             </td>
-            //             <td className="">
-            //                 <div className='flex justify-center items-center'>
-            //                     <div className="py-1 px-3 rounded-md bg-[#FFF0BB]">
-            //                         <Icon path={mdiStar} size={1} className="text-[#FFAC33]" />
-            //                     </div>
-            //                 </div>
-            //             </td>
-            //         </tr>
-
-            //     </tbody>
-            // </table >
             <div className=''>
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                     <TableContainer sx={{ maxHeight: 440 }} >
@@ -232,14 +178,14 @@ function TableStatus() {
                                         {columns.map((column) => {
                                             const value = row[column.id as keyof Data];
 
-                                            if (column.id === 'teacher' && typeof value === 'object' && value !== null) {
-                                                const teacher = value as { name: string; description: string };
+                                            if (column.id === 'user' && typeof value === 'object' && value !== null) {
+                                                const teacher = value as { email: string; description: string };
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
                                                         <div className="flex gap-2 items-center">
                                                             <Icon path={mdiAccountCircle} size={2.5} />
                                                             <div>
-                                                                <h1>{teacher.name}</h1>
+                                                                <h1>{teacher.email}</h1>
                                                                 <p className="text-gray-400">{teacher.description}</p>
                                                             </div>
                                                         </div>
@@ -258,10 +204,23 @@ function TableStatus() {
                                                     </TableCell>
                                                 );
                                             }
+
+                                            if (column.id === 'files' && typeof value === 'string') {
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        <div className="  flex justify-center items-center">
+                                                            <div className='py-1 px-4 rounded-2xl flex text-center'>
+                                                                <h1>{value}</h1>
+                                                            </div>
+                                                        </div>
+                                                    </TableCell>
+                                                );
+                                            }
+
                                             if (column.id === 'detail' && typeof value === 'string') {
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                        <div onClick={() => setTimeLine('test')}  className='cursor-pointer flex justify-center items-center'>
+                                                        <div onClick={() => setTimeLine('test')} className='cursor-pointer flex justify-center items-center'>
                                                             <div className="py-1 px-3 rounded-md bg-[#FFF0BB]">
                                                                 <Icon path={mdiStar} size={1} className="text-[#FFAC33]" />
                                                             </div>
