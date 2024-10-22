@@ -127,7 +127,7 @@ function TableStatus({ email }: { email: string }) {
                     <Icon path={mdiArrowLeftCircle} size={1} />
                     <p className='text-gray-500'>ส่งถึง: {timeLine.email}</p>
                 </div>
-                <div className='mt-3'>
+                <div className='mt-10'>
                     <Timeline timeLine={timeLine} />
                 </div>
                 <div className='flex justify-start mt-5'>
@@ -205,7 +205,7 @@ function TableStatus({ email }: { email: string }) {
                                                             <div className="flex justify-center items-center">
                                                                 {value === "validate" || value === "wait" ? (
                                                                     <div className='py-1 px-4 rounded-2xl bg-gray-200'>
-                                                                        <h1 className='text-ellipsis whitespace-nowrap ove'>รอการตรวจสอบ</h1>
+                                                                        <h1 className='text-ellipsis whitespace-nowrap ove'>รอการตรวจตอบกลับ</h1>
                                                                     </div>
                                                                 ) : (value === "faild") ? (
                                                                     <div className='py-1 px-4 rounded-2xl bg-red-400'>

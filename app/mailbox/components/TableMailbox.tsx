@@ -5,7 +5,7 @@ import Icon from '@mdi/react';
 import { mdiAccountCircle, mdiStar, mdiArrowLeftCircle } from '@mdi/js';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import PulseLoader from "react-spinners/PulseLoader";
+import Reply from './Reply';
 
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -47,6 +47,7 @@ interface MailBox {
     header: string;
     detail: string;
     date: string;
+    type: string;
     time: string;
     from: string;
     status: boolean;
@@ -89,8 +90,6 @@ function TableMailbox({ email }: { email: string }) {
         }
     }
 
-    console.log(allMailbox);
-
     const rows = allMailbox.map((mailBox) => {
 
         // ตรวจสอบว่า sent.files เป็นอาร์เรย์
@@ -120,9 +119,20 @@ function TableMailbox({ email }: { email: string }) {
         setPage(0);
     };
 
+    //open detail
+    const [onDetail, setOnDetail] = useState<MailBox | undefined>(undefined);
+
     return (
-        <div className=''>
-            {allMailbox.length > 0 ? (
+        allMailbox.length > 0 ? (
+            onDetail ? (
+                <div>
+                    <div onClick={() => setOnDetail(undefined)} className='flex gap-3 cursor-pointer'>
+                        <Icon path={mdiArrowLeftCircle} size={1} />
+                        <p className='text-gray-500'>ข้อความจาก: {onDetail.from}</p>
+                    </div>
+                    <Reply data={onDetail} />
+                </div>
+            ) : (
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                     <TableContainer sx={{ maxHeight: 440 }} >
                         <Table stickyHeader aria-label="sticky table">
@@ -191,6 +201,7 @@ function TableMailbox({ email }: { email: string }) {
                                                     <TableCell key={column.id} align={column.align}>
                                                         <div
                                                             className='cursor-pointer flex justify-center items-center'
+                                                            onClick={() => setOnDetail(allMailbox[rowIndex])}
                                                         >
                                                             <div className="py-1 px-3 rounded-md bg-[#FFF0BB]">
                                                                 <Icon path={mdiStar} size={1} className="text-[#FFAC33]" />
@@ -221,15 +232,15 @@ function TableMailbox({ email }: { email: string }) {
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
-                </Paper>
-            ) : (
-                <div className='flex justify-center'>
-                    <div className='bg-gray-200 py-2 px-4 rounded-xl text-black w-fit'>
-                        ไม่มีข้อความที่ถูกส่งมา!
-                    </div>
+                </Paper >
+            )
+        ) : (
+            <div className='flex justify-center'>
+                <div className='bg-gray-200 py-2 px-4 rounded-xl text-black w-fit'>
+                    ไม่มีข้อความที่ถูกส่งมา!
                 </div>
-            )}
-        </div>
+            </div>
+        )
     )
 
 

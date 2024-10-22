@@ -366,7 +366,7 @@ function FormSent({ setLoader }: FormSentProps) {
                                     <label>Tags</label>
                                     <div className='mt-2 flex items-center rounded-xl border border-gray-300 p-2'>
                                         <select
-                                            className='w-full p-1 appearance-none text-center bg-white cursor-pointer'
+                                            className='w-full p-1 appearance-none bg-white cursor-pointer'
                                             onChange={(e) => setType(e.target.value)}
                                         >
                                             <option value="0">-</option>
@@ -385,10 +385,9 @@ function FormSent({ setLoader }: FormSentProps) {
                                 <div className="mt-2 flex items-center rounded-xl border border-gray-300 p-2 ">
                                     <textarea
                                         placeholder="Enter your details"
-                                        className="focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow text-gray-700 w-full resize-none p-1 rounded-sm"
+                                        className="max-h-40 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow text-gray-700 w-full p-1 rounded-sm"
                                         onChange={(e) => setDetail(e.target.value)}
                                     />
-                                    <Icon path={mdiAccountCircle} size={1.5} className="text-gray-400 ml-2 mt-1" />
                                 </div>
                             </div>
                             {error && (
