@@ -13,7 +13,13 @@ const SentSchema = new mongoose.Schema({
     type: { type: String },
     detail: { type: String },
     status: { type: String },
-    from: { type: [String] },
+    from: [
+        {
+            email: {type: String, require: true},
+            time: {type: String, require: true},
+            date: {type: String, require: true},
+        }
+    ],
 },
     {
         timestamps: true

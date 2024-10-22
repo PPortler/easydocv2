@@ -29,6 +29,7 @@ export async function POST(req) {
             message: "อีเมลถูกบันทึกสำเร็จ", 
             id: savedSent._id // ส่ง id ที่สร้างขึ้นกลับไป
         }, { status: 201 });
+        
     } catch (err) {
         console.error("Error saving email:", err);
         return NextResponse.json({ error: "เกิดข้อผิดพลาด" }, { status: 500 });

@@ -8,7 +8,7 @@ export async function POST(req) {
         await connectDB();
 
         // ดึงข้อมูลจากคำขอ
-        const { email, idSent } = await req.json();
+        const { email, idSent, files, header, type, detail, date, time, status, fromEmail } = await req.json();
 
         // ตรวจสอบว่ามี email และ idSent หรือไม่
         if (!email || !idSent) {
@@ -19,6 +19,14 @@ export async function POST(req) {
         const newMailBox = new mailBoxs({
             email: email,
             idSent: idSent,
+            files: files,
+            header: header,
+            type: type,
+            detail: detail,
+            date: date,
+            time: time,
+            status: status,
+            from: fromEmail
         });
 
         // บันทึกลงฐานข้อมูล

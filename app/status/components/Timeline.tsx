@@ -17,7 +17,7 @@ interface Sents {
     detail: string;
     status: string;
     date: string;
-    from: [string];
+    from: [{ email: string, time: string, date: string }];
 }
 
 interface TimelineProps {
@@ -26,12 +26,11 @@ interface TimelineProps {
 
 function Timeline({ timeLine }: TimelineProps) {
 
-    console.log(timeLine);
     return (
         <MuiTimeline position="alternate-reverse">
             <TimelineItem className=''>
                 <TimelineOppositeContent variant='h6' color='grey'>
-                    9:30 am
+                    {timeLine?.from[0]?.time}
                 </TimelineOppositeContent>
                 <TimelineSeparator>
                     <TimelineDot color="success" className='w-10 h-10' />
@@ -41,15 +40,12 @@ function Timeline({ timeLine }: TimelineProps) {
                     <Typography variant="h6" component="span">
                         ส่ง
                     </Typography>
-                    <Typography>{timeLine?.from[0]}</Typography>
+                    <Typography>{timeLine?.from[0]?.email}</Typography>
                 </TimelineContent>
             </TimelineItem>
             {timeLine?.from.map((e, index) => (
                 index === timeLine?.from.length - 1 ? (
                     <TimelineItem className=''>
-                        <TimelineOppositeContent variant='h6' color='grey'>
-                            9:30 am
-                        </TimelineOppositeContent>
                         <TimelineSeparator>
                             <TimelineDot color="grey" className='w-10 h-10' />
                             {/* <TimelineConnector className='w h-14' /> */}
@@ -64,7 +60,7 @@ function Timeline({ timeLine }: TimelineProps) {
                 ) : (
                     <TimelineItem className=''>
                         <TimelineOppositeContent variant='h6' color='grey'>
-                            9:30 am
+                            {e.time}
                         </TimelineOppositeContent>
                         <TimelineSeparator>
                             <TimelineDot color="success" className='w-10 h-10' />
@@ -72,9 +68,9 @@ function Timeline({ timeLine }: TimelineProps) {
                         </TimelineSeparator>
                         <TimelineContent >
                             <Typography variant="h6" component="span">
-                                ส่ง
+                                ส่งไปถึง
                             </Typography>
-                            <Typography>{e}</Typography>
+                            <Typography>{e.email}</Typography>
                         </TimelineContent>
                     </TimelineItem >
                 )

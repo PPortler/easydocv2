@@ -27,6 +27,12 @@ interface File {
     fileURL: string;
 }
 
+interface FromEmail {
+    email: string;
+    time: string;
+    date: string;
+}
+
 interface FormSentProps {
     setLoader: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -42,14 +48,15 @@ function FormSent({ setLoader }: FormSentProps) {
 
     const { data: session } = useSession();
 
-    const [fromEmail, setFromEmail] = useState<string>('');
+    const [fromEmailDefault, setFromEmailDefault] = useState<string>('');
+
     useEffect(() => {
         getAllUser();
 
         const email = session?.user?.email;
 
         if (email) {
-            setFromEmail(email);
+            setFromEmailDefault(email);
         }
 
     }, [session])
@@ -143,25 +150,31 @@ function FormSent({ setLoader }: FormSentProps) {
     //submit form 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-
+        setError(""); 
         setLoader(true);
 
         console.log("files: " + files);
         console.log("header: " + header);
         console.log("type: " + type);
         console.log("detail: " + detail);
-        console.log("from: " + fromEmail);
+        console.log("from: " + fromEmailDefault);
 
         if (email.length === 0 || files.length === 0 || !header || !type || !detail) {
             setError("กรุณากรอกข้อมูลให้ครบทุกช่อง");
             setLoader(false);
             return;
         }
-        if (email.some(e => e === fromEmail)) {
+        if (email.some(e => e === fromEmailDefault)) {
             setError("ไม่สามารถส่งอีเมลเดียวกันกับผู้ใช้");
             setLoader(false);
             return;
         }
+
+        const now = new Date();
+        const time = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }); // เช่น 08:30
+        const date = now.toISOString().split('T')[0]; // เช่น 2024-12-19
+    
+        const fromEmailObject = { email: fromEmailDefault, time, date }; // สร้างอ็อบเจ็กต์
 
         let checkStatus = false;
         try {
@@ -175,7 +188,7 @@ function FormSent({ setLoader }: FormSentProps) {
                     type: type,
                     detail: detail,
                     status: "validate",
-                    fromEmail: fromEmail
+                    fromEmail: fromEmailObject
                 }
                 );
 
@@ -186,16 +199,30 @@ function FormSent({ setLoader }: FormSentProps) {
                         `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/mailBox`, { // ใช้ sentId
                         email: e,
                         idSent: sentId,
+                        files: files,
+                        header: header,
+                        type: type,
+                        detail: detail,
+                        date: date,
+                        time: time,
+                        status: false,
+                        fromEmail: session?.user?.email
                     }
                     ).then(() => {
                         checkStatus = true;
                     });
-
                 }
                 console.log("email " + e);
             }
         } catch (err) {
             console.error("เกิดข้อผิดพลาดในการส่งอีเมล:", err);
+            Swal.fire({
+                icon: 'error',
+                title: 'ส่งไฟล์ล้มเหลว!',
+                text: 'ลองใหม่อีกครั้งในภายหลัง!'
+            }).then(() => {
+                setLoader(false);
+            });
             setLoader(false);
         }
 
@@ -208,10 +235,16 @@ function FormSent({ setLoader }: FormSentProps) {
                 window.location.reload();
             });
         } else {
-            setLoader(false); // ให้โหลดหายถ้าไม่สำเร็จ
+            Swal.fire({
+                icon: 'error',
+                title: 'ส่งไฟล์ล้มเหลว!',
+                text: 'ลองใหม่อีกครั้งในภายหลัง!'
+            }).then(() => {
+                setLoader(false);
+                window.location.reload();
+            });
         }
     }
-
 
     return (
         <div>

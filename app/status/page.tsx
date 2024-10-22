@@ -15,7 +15,6 @@ function Status() {
 
     useEffect(() => {
         if(status === 'loading'){
-            setLoader(true);
             return;
         }
 

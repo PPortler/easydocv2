@@ -3,7 +3,9 @@
 import React from 'react'
 import Icon from '@mdi/react';
 import { mdiAccountCircle, mdiStar, mdiArrowLeftCircle } from '@mdi/js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import PulseLoader from "react-spinners/PulseLoader";
 
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
@@ -14,57 +16,96 @@ import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 
+
 interface Column {
-    id: 'user' | 'status' | 'files' | 'date' | 'detail';
+    id: 'user' | 'time' | 'files' | 'date' | 'detail';
     label: string;
     minWidth?: number;
     align?: 'right';
     format?: (value: number) => string;
 }
 const columns: readonly Column[] = [
-    { id: 'user', label: 'user', minWidth: 170 },
-    { id: 'status', label: 'Status', minWidth: 100 },
-    { id: 'files', label: 'Files', minWidth: 170 },
+    { id: 'user', label: 'User', minWidth: 170 },
+    { id: 'files', label: 'Files', minWidth: 100 },
     { id: 'date', label: 'Date', minWidth: 170 },
+    { id: 'time', label: 'Time', minWidth: 170 },
     { id: 'detail', label: 'Detail', minWidth: 170 },
 ];
 
 interface Data {
-    user: { name: string; description: string };
-    status: string;
+    user: { email: string; description: string };
     files: string;
+    time: string;
     date: string;
     detail: string;
 }
 
-function createData(
-    user: { name: string; description: string },
-    status: string,
-    files: string,
-    date: string,
-    detail: string
-): Data {
-    return { user, status, files, date, detail };
+interface MailBox {
+    email: string;
+    idSent: string;
+    files: [{ fileName: string, fileType: string, fileURL: string }];
+    header: string;
+    detail: string;
+    date: string;
+    time: string;
+    from: string;
+    status: boolean;
 }
 
-const rows = [
-    createData(
-        { name: 'User1', description: 'Senior Lecturer in Physics' },
-        'Agreen',
-        "Document1",
-        "17/06/2024",
-        ""
-    ),
-    createData(
-        { name: 'User2', description: 'Senior Lecturer in Physics' },
-        'Agreen',
-        "Document1",
-        "17/06/2024",
-        ""
-    ),
-];
+function createData(
+    user: { email: string; description: string },
+    files: string,
+    date: string,
+    time: string,
+    detail: string
+): Data {
+    return { user, files, time, date, detail };
+}
 
-function TableStatus() {
+
+function TableMailbox({ email }: { email: string }) {
+
+    //get all sent
+    const [allMailbox, setAllMailbox] = useState<MailBox[]>([]);
+
+    useEffect(() => {
+        if (email) {
+            getMailBox(email)
+        }
+    }, [email])
+
+    async function getMailBox(email: string) {
+
+        try {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/mailBox/${email}`);
+
+            if (res.status === 200) {
+                setAllMailbox(res.data);
+            } else {
+                console.log('Error get dataUser');
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    console.log(allMailbox);
+
+    const rows = allMailbox.map((mailBox) => {
+
+        // ตรวจสอบว่า sent.files เป็นอาร์เรย์
+        const fileNames: string[] = Array.isArray(mailBox.files)
+            ? mailBox.files.map(file => file.fileName + "." + file.fileType) // เก็บชื่อไฟล์ในอาร์เรย์
+            : []; // ใช้อาร์เรย์ว่างถ้าไม่ใช่อาร์เรย์
+
+        return createData(
+            { email: mailBox.from, description: mailBox.header },
+            fileNames.join(', '),
+            mailBox.date,
+            mailBox.time,
+            ""
+        );
+    });
 
     //table
     const [page, setPage] = React.useState(0);
@@ -80,7 +121,8 @@ function TableStatus() {
     };
 
     return (
-            <div className=''>
+        <div className=''>
+            {allMailbox.length > 0 ? (
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                     <TableContainer sx={{ maxHeight: 440 }} >
                         <Table stickyHeader aria-label="sticky table">
@@ -98,19 +140,20 @@ function TableStatus() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, rowIndex) => (
+                                    <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
                                         {columns.map((column) => {
                                             const value = row[column.id as keyof Data];
 
+                                            // แสดงค่า user
                                             if (column.id === 'user' && typeof value === 'object' && value !== null) {
-                                                const teacher = value as { name: string; description: string };
+                                                const teacher = value as { email: string; description: string };
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
                                                         <div className="flex gap-2 items-center">
                                                             <Icon path={mdiAccountCircle} size={2.5} />
                                                             <div>
-                                                                <h1>{teacher.name}</h1>
+                                                                <h1>{teacher.email}</h1>
                                                                 <p className="text-gray-400">{teacher.description}</p>
                                                             </div>
                                                         </div>
@@ -118,21 +161,37 @@ function TableStatus() {
                                                 );
                                             }
 
-                                            if (column.id === 'status' && typeof value === 'string') {
+                                            // แสดงค่า status
+                                            if (column.id === 'time' && typeof value === 'string') {
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                        <div className="  flex justify-center items-center ">
-                                                            <div className='py-1 px-4 rounded-2xl bg-[#D4F8D3]'>
-                                                                <h1>{value}</h1>
+                                                        <div className="flex justify-center items-center">
+                                                            {value} น.
+                                                        </div>
+                                                    </TableCell>
+                                                );
+                                            }
+
+                                            // แสดงค่า files
+                                            if (column.id === 'files' && Array.isArray(value)) {
+                                                return (
+                                                    <TableCell key={column.id} align={column.align}>
+                                                        <div className="flex justify-center items-center">
+                                                            <div className='py-1 px-4 rounded-2xl flex text-center'>
+                                                                <h1>{value.join(', ')}</h1> {/* แสดงชื่อไฟล์ที่แปลงเป็นสตริง */}
                                                             </div>
                                                         </div>
                                                     </TableCell>
                                                 );
                                             }
+
+                                            // แสดงค่า detail และตั้งค่าฟังก์ชัน onClick
                                             if (column.id === 'detail' && typeof value === 'string') {
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                        <div className='cursor-pointer flex justify-center items-center'>
+                                                        <div
+                                                            className='cursor-pointer flex justify-center items-center'
+                                                        >
                                                             <div className="py-1 px-3 rounded-md bg-[#FFF0BB]">
                                                                 <Icon path={mdiStar} size={1} className="text-[#FFAC33]" />
                                                             </div>
@@ -147,10 +206,10 @@ function TableStatus() {
                                                 </TableCell>
                                             );
                                         })}
-
                                     </TableRow>
                                 ))}
                             </TableBody>
+
                         </Table>
                     </TableContainer>
                     <TablePagination
@@ -163,8 +222,17 @@ function TableStatus() {
                         onRowsPerPageChange={handleChangeRowsPerPage}
                     />
                 </Paper>
-            </div>
-        )
+            ) : (
+                <div className='flex justify-center'>
+                    <div className='bg-gray-200 py-2 px-4 rounded-xl text-black w-fit'>
+                        ไม่มีข้อความที่ถูกส่งมา!
+                    </div>
+                </div>
+            )}
+        </div>
+    )
+
+
 }
 
-export default TableStatus
+export default TableMailbox

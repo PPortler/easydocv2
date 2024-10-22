@@ -46,7 +46,7 @@ interface Sents {
     detail: string;
     status: string;
     date: string;
-    from: [string];
+    from: [{ email: string, time: string, date: string }];
 }
 
 function createData(
@@ -86,29 +86,19 @@ function TableStatus({ email }: { email: string }) {
         }
     }
 
-    const formatDate = (date: Date) => {
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // เดือน (0-11)
-        const day = String(date.getDate()).padStart(2, '0'); // วัน
-        const year = date.getFullYear(); // ปี
-
-        return `${month}-${day}-${year}`; // รูปแบบ MM-DD-YYYY
-    };
-
     const rows = allSent.map((sent) => {
         // ตรวจสอบว่า sent.files เป็นอาร์เรย์
         const fileNames: string[] = Array.isArray(sent.files)
             ? sent.files.map(file => file.fileName + "." + file.fileType) // เก็บชื่อไฟล์ในอาร์เรย์
             : []; // ใช้อาร์เรย์ว่างถ้าไม่ใช่อาร์เรย์
 
-        const isoString = sent.date; // สมมุติว่า sent.date เป็น ISO string
-        const date = new Date(isoString);
-        const dateString = formatDate(date); // แปลงเป็นสตริงในรูปแบบ MM-DD-YYYY
+        const date = sent.from?.[0]?.date || 'N/A'; 
 
         return createData(
             { email: sent.email, description: sent.header },
             sent.status,
             fileNames.join(', '),
-            dateString,
+            date,
             ""
         );
     });
@@ -138,7 +128,7 @@ function TableStatus({ email }: { email: string }) {
                     <p className='text-gray-500'>ส่งถึง: {timeLine.email}</p>
                 </div>
                 <div className='mt-3'>
-                    <Timeline timeLine={timeLine}/>
+                    <Timeline timeLine={timeLine} />
                 </div>
                 <div className='flex justify-start mt-5'>
                     <div className='flex flex-col gap-2'>

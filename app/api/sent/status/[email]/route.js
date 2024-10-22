@@ -16,7 +16,7 @@ export async function GET(req) {
 
     try {
         // ค้นหา Sents ที่มี email ตรงกัน
-        const results = await Sents.find({ from: email });
+        const results = await Sents.find({ from: { $elemMatch: { email: email } } });
 
         // ตรวจสอบว่า results มีข้อมูลหรือไม่
         if (!results.length) {
@@ -32,7 +32,6 @@ export async function GET(req) {
             type: sent.type,
             detail: sent.detail,
             status: sent.status,
-            date: sent.createdAt,
             from: sent.from,
         }));
 
