@@ -39,14 +39,16 @@ function Timeline({ timeLine }: TimelineProps) {
                 <>
                     <TimelineItem className='' key={index}>
                         <TimelineOppositeContent color='grey'>
-                            {e.time}
+                            <p>
+                                {e.time} น.
+                            </p>
                         </TimelineOppositeContent>
                         <TimelineSeparator>
                             <TimelineDot color="success" className='w-10 h-10' />
                             <TimelineConnector className='w h-14' />
                         </TimelineSeparator>
                         <TimelineContent >
-                            <Typography  component="span">
+                            <Typography component="span">
                                 <p className='text-md'>{index === 0 ? "ส่ง" : "ส่งไปที่"}</p>
                             </Typography>
                             <Typography>
@@ -60,7 +62,8 @@ function Timeline({ timeLine }: TimelineProps) {
                         timeLine?.status === "complete" && index === timeLine?.fromSent.length - 1 ? (
                             <TimelineItem className=''>
                                 <TimelineSeparator>
-                                    <TimelineDot color="success" className='w-10 h-10' />                                </TimelineSeparator>
+                                    <TimelineDot color="success" className='w-10 h-10' />
+                                </TimelineSeparator>
                                 <TimelineContent >
                                     <Typography component="span">
                                         <p className='text-md '>ตอบกลับแล้ว</p>
@@ -78,7 +81,7 @@ function Timeline({ timeLine }: TimelineProps) {
                                     <TimelineDot color="grey" className='w-10 h-10' />
                                 </TimelineSeparator>
                                 <TimelineContent >
-                                    <Typography variant="h6" component="span">
+                                    <Typography component="span">
                                         <p className='text-md '>รอการตอบกลับ</p>
                                     </Typography>
                                     <Typography>
