@@ -10,6 +10,8 @@ import TimelineDot from '@mui/lab/TimelineDot';
 import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import Typography from '@mui/material/Typography';
 
+import Link from 'next/link';
+
 interface Sents {
     files: [{ fileName: string, fileType: string, fileURL: string }];
     email: string;
@@ -61,6 +63,11 @@ function Timeline({ timeLine }: TimelineProps) {
                     {index === timeLine?.fromSent?.length - 1 && (
                         timeLine?.status === "complete" && index === timeLine?.fromSent.length - 1 ? (
                             <TimelineItem className=''>
+                                <TimelineOppositeContent >
+                                    <Link href="/mailbox" className='py-2 px-4 text-white text-xs rounded-xl bg-[#6f69ea] border'>
+                                        ไปที่กล่องข้อความ
+                                    </Link>
+                                </TimelineOppositeContent>
                                 <TimelineSeparator>
                                     <TimelineDot color="success" className='w-10 h-10' />
                                 </TimelineSeparator>
