@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
 import Loader from '../component/Loader'
 import TableMailbox from './components/TableMailbox'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation'
 
 function MailBox() {
 
