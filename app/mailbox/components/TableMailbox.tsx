@@ -105,7 +105,7 @@ function TableMailbox({ email }: { email: string }) {
                 sentTemp?.time || "N/A",
                 ""
             );
-        });
+        }).reverse();
 
 
     //table
@@ -131,112 +131,141 @@ function TableMailbox({ email }: { email: string }) {
                     <div onClick={() => setOnDetail(undefined)} className='flex gap-3 cursor-pointer'>
                         <Icon path={mdiArrowLeftCircle} size={1} />
                         <p className='text-gray-500'>
-                            ข้อความจาก: {onDetail?.fromSent?.length > 0 ? `${onDetail.fromSent[onDetail?.fromSent.length - 1]?.email}` : "ไม่มีข้อมูล"}
+                            ข้อความจาก: {onDetail.fromSent[0]?.email}
                         </p>
                     </div>
                     <Reply data={onDetail} emailSession={email} />
                 </div>
             ) : (
-                <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                    <TableContainer sx={{ maxHeight: 440 }} >
-                        <Table stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    {columns.map((column) => (
-                                        <TableCell
-                                            key={column.id}
-                                            align="center"
-                                            style={{ minWidth: column.minWidth }}
-                                        >
-                                            {column.label}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, rowIndex) => (
-                                    <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                                        {columns.map((column) => {
-                                            const value = row[column.id as keyof Data];
-
-                                            // แสดงค่า user
-                                            if (column.id === 'user' && typeof value === 'object' && value !== null) {
-                                                const teacher = value as { email: string; description: string };
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        <div className="flex gap-2 items-center">
-                                                            <Icon path={mdiAccountCircle} size={2.5} />
-                                                            <div>
-                                                                <p className='font-bold text-md'>{teacher.description}</p>
-                                                                <p className="text-gray-400 text-xs">{teacher.email}</p>
-                                                            </div>
-                                                        </div>
-                                                    </TableCell>
-                                                );
-                                            }
-
-                                            // แสดงค่า status
-                                            if (column.id === 'time' && typeof value === 'string') {
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        <div className="flex justify-center items-center">
-                                                            {value} น.
-                                                        </div>
-                                                    </TableCell>
-                                                );
-                                            }
-
-                                            // แสดงค่า files
-                                            if (column.id === 'files' && Array.isArray(value)) {
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        <div className="flex justify-center items-center">
-                                                            <div className='py-1 px-4 rounded-2xl flex text-center'>
-                                                                <h1>{value.join(', ')}</h1> {/* แสดงชื่อไฟล์ที่แปลงเป็นสตริง */}
-                                                            </div>
-                                                        </div>
-                                                    </TableCell>
-                                                );
-                                            }
-
-                                            // แสดงค่า detail และตั้งค่าฟังก์ชัน onClick
-                                            if (column.id === 'detail' && typeof value === 'string') {
-                                                return (
-                                                    <TableCell key={column.id} align={column.align}>
-                                                        <div
-                                                            className='cursor-pointer flex justify-center items-center'
-                                                            onClick={() => setOnDetail(allMailbox[rowIndex])}
-                                                        >
-                                                            <div className="py-1 px-3 rounded-md bg-[#FFF0BB]">
-                                                                <Icon path={mdiStar} size={1} className="text-[#FFAC33]" />
-                                                            </div>
-                                                        </div>
-                                                    </TableCell>
-                                                );
-                                            }
-
-                                            return (
-                                                <TableCell key={column.id} align='center'>
-                                                    {typeof value === 'string' ? value : ''}
-                                                </TableCell>
-                                            );
-                                        })}
+                <div>
+                    <div className='mb-5 flex gap-3 justify-end text-gray-600 text-xs'>
+                        <div className='flex gap-2 items-center'>
+                            <div className='w-3 h-3 rounded-full bg-green-300'></div>
+                            <p className=''>ได้รับการตอบกลับแล้ว</p>
+                        </div>
+                        <div className='flex gap-2 items-center'>
+                            <div className='w-3 h-3 rounded-full bg-red-500'></div>
+                            <p className=''>ข้อความที่ยังไม่ได้ตอบกลับ</p>
+                        </div>
+                        <div className='flex gap-2 items-center'>
+                            <div className='w-3 h-3 rounded-full bg-yellow-500'></div>
+                            <p className=''>ข้อความที่ถูกส่งต่อมา</p>
+                        </div>
+                    </div>
+                    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                        <TableContainer sx={{ maxHeight: 440 }} >
+                            <Table stickyHeader aria-label="sticky table">
+                                <TableHead>
+                                    <TableRow>
+                                        {columns.map((column) => (
+                                            <TableCell
+                                                key={column.id}
+                                                align="center"
+                                                style={{ minWidth: column.minWidth }}
+                                            >
+                                                {column.label}
+                                            </TableCell>
+                                        ))}
                                     </TableRow>
-                                ))}
-                            </TableBody>
+                                </TableHead>
+                                <TableBody>
+                                    {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, rowIndex) => {
+                                        const reverseIndex = rows.length - 1 - (page * rowsPerPage + rowIndex);
+                                        return (
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                                                {columns.map((column) => {
+                                                    const value = row[column.id as keyof Data];
 
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        rowsPerPageOptions={[10, 25, 100]}
-                        component="div"
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onPageChange={handleChangePage}
-                        onRowsPerPageChange={handleChangeRowsPerPage}
-                    />
-                </Paper >
+                                                    // แสดงค่า user
+                                                    if (column.id === 'user' && typeof value === 'object' && value !== null) {
+                                                        const teacher = value as { email: string; description: string };
+                                                        return (
+                                                            <TableCell key={column.id} align={column.align}>
+                                                                <div className="flex gap-2 items-center">
+                                                                    <Icon path={mdiAccountCircle} size={2.5} />
+                                                                    <div>
+                                                                        <p className='font-bold text-md'>{teacher.description}</p>
+                                                                        <p className="text-gray-400 text-xs">{teacher.email}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </TableCell>
+                                                        );
+                                                    }
+
+                                                    // แสดงค่า status
+                                                    if (column.id === 'time' && typeof value === 'string') {
+                                                        return (
+                                                            <TableCell key={column.id} align={column.align}>
+                                                                <div className="flex justify-center items-center">
+                                                                    {value} น.
+                                                                </div>
+                                                            </TableCell>
+                                                        );
+                                                    }
+
+                                                    // แสดงค่า files
+                                                    if (column.id === 'files' && Array.isArray(value)) {
+                                                        return (
+                                                            <TableCell key={column.id} align={column.align}>
+                                                                <div className="flex justify-center items-center">
+                                                                    <div className='py-1 px-4 rounded-2xl flex text-center'>
+                                                                        <h1>{value.join(', ')}</h1> {/* แสดงชื่อไฟล์ที่แปลงเป็นสตริง */}
+                                                                    </div>
+                                                                </div>
+                                                            </TableCell>
+                                                        );
+                                                    }
+
+                                                    // แสดงค่า detail และตั้งค่าฟังก์ชัน onClick
+                                                    if (column.id === 'detail' && typeof value === 'string') {
+                                                        return (
+                                                            <TableCell key={column.id} align={column.align} className='relative'>
+                                                                <div
+                                                                    className='cursor-pointer flex justify-center items-center'
+                                                                    onClick={() => setOnDetail(allMailbox[reverseIndex])}
+                                                                >
+                                                                    <div className="py-1 px-3 rounded-md bg-[#FFF0BB]">
+                                                                        <Icon path={mdiStar} size={1} className="text-[#FFAC33]" />
+                                                                    </div>
+                                                                </div>
+                                                                {!allMailbox[reverseIndex]?.status ? (
+                                                                    allMailbox[reverseIndex].fromSent?.length > 1 ? (
+                                                                        <div className='w-3 h-3 rounded-full bg-yellow-400 absolute top-0 right-0 m-4'></div>
+                                                                    ) : (
+                                                                        <div className='w-3 h-3 rounded-full bg-red-500 absolute top-0 right-0 m-4'></div>
+                                                                    )
+                                                                ) : (
+                                                                    <div className='w-3 h-3 rounded-full bg-green-300 absolute top-0 right-0 m-4'></div>
+                                                                )}
+                                                            </TableCell>
+                                                        );
+                                                    }
+
+                                                    return (
+                                                        <TableCell key={column.id} align='center'>
+                                                            {typeof value === 'string' ? value : ''}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                            </TableRow>
+                                        )
+                                    })}
+                                </TableBody>
+
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[10, 25, 100]}
+                            component="div"
+                            count={rows.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                        />
+                    </Paper >
+
+                </div>
             )
         ) : (
             <div className='flex justify-center'>

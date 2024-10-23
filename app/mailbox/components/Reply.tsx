@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image';
 import Icon from '@mdi/react';
-import { mdiUploadCircle,mdiAccountCircle, mdiCloseCircle } from '@mdi/js';
+import { mdiUploadCircle, mdiAccountCircle, mdiCloseCircle } from '@mdi/js';
 import axios from 'axios';
 import Select from 'react-select';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -293,7 +293,7 @@ function Reply({ data, emailSession }: MailBoxProps) {
                         />
                     </div>
                 </div>
-                {data?.status ? (
+                {data?.status || (data?.fromSent?.length ?? 0) > 1 ? (
                     <div>
                         <label className='font-bold'>การตอบกลับ</label>
                         {data?.fromSent?.map((e, index) => (
@@ -302,6 +302,9 @@ function Reply({ data, emailSession }: MailBoxProps) {
                                     <div className='mt-5 flex items-center gap-2'>
                                         <Icon path={mdiAccountCircle} size={1.5} />
                                         {e.email}
+                                    </div>
+                                    <div className='mt-2 flex flex-col text-xs text-gray-500'>
+                                        <p>วันที่ส่ง: {e.date}, {e.time} น.</p>
                                     </div>
                                     {e.files?.map((file, index) => (
                                         <div key={index} className='mt-5 cursor-pointer p-3 bg-gray-100 rounded-xl flex gap-3 items-center w-fit'>
@@ -320,131 +323,132 @@ function Reply({ data, emailSession }: MailBoxProps) {
                             )
                         ))}
                     </div>
-                ) : (
-                    onReplyForm || onSentForm ? (
-                        <>
-                            <div className='flex flex-col items-center relative my-5'>
-                                <hr className='border-gray-400 w-full' />
-                                <p className='bg-white text-gray-400 w-fit absolute top-[-14px] text-sm py-1 px-2'>{onReplyForm ? "ตอบกลับ" : "ส่งต่อ"}</p>
-                            </div>
-                            <div>
-                                <label>
-                                    ส่งที่ อีเมล: <span className='text-red-500'> *</span>
-                                </label>
-                                {onReplyForm ? (
-                                    <div className='mt-2 flex items-center rounded-xl border border-gray-300 p-2 w-96'>
-                                        <input
-                                            type="text"
-                                            className='w-full p-1 '
-                                            defaultValue={data?.fromSent[0]?.email}
-                                            readOnly
-                                        />
-                                    </div>
-                                ) : (
-                                    <div className='mt-2 w-96 flex items-center rounded-xl border border-gray-300 p-1'>
-                                        <div className='w-full'>
-                                            <Select
-                                                options={allEmail}
-                                                className="basic-multi-select"
-                                                classNamePrefix="select"
-                                                styles={{
-                                                    control: (provided) => ({
-                                                        ...provided,
-                                                        border: 'none',
-                                                        boxShadow: 'none',
-                                                        width: '100%',
-                                                    }),
-                                                }}
-                                                onChange={(selectedOptions) => {
-                                                    const selectedEmail = selectedOptions ? selectedOptions.value : '';
-                                                    setEmail(selectedEmail); // เนื่องจากเลือกได้เพียงตัวเดียว จะตั้งค่า selectedEmail แทนที่จะเป็น array
-                                                }}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                            <div className=''>
-                                <label>
-                                    ข้อความ: <span className='text-red-500'> *</span>
-                                </label>
-                                <div className="mt-2 flex items-center rounded-xl border border-gray-300 p-2 ">
-                                    <textarea
-                                        placeholder="ข้อความ..."
-                                        className="min-h-24 max-h-40 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow text-gray-700 w-full p-1 rounded-sm"
-                                        onChange={(e) => setReply(e.target.value)}
+                ) : null}
+
+                {onReplyForm || onSentForm ? (
+                    <>
+                        <div className='flex flex-col items-center relative my-5'>
+                            <hr className='border-gray-400 w-full' />
+                            <p className='bg-white text-gray-400 w-fit absolute top-[-14px] text-sm py-1 px-2'>{onReplyForm ? "ตอบกลับ" : "ส่งต่อ"}</p>
+                        </div>
+                        <div>
+                            <label>
+                                ส่งที่ อีเมล: <span className='text-red-500'> *</span>
+                            </label>
+                            {onReplyForm ? (
+                                <div className='mt-2 flex items-center rounded-xl border border-gray-300 p-2 w-96'>
+                                    <input
+                                        type="text"
+                                        className='w-full p-1 '
+                                        defaultValue={data?.fromSent[0]?.email}
+                                        readOnly
                                     />
                                 </div>
-                            </div>
-                            {onReplyForm ? (
-                                <div>
-                                    <input id="upload" type="file" hidden multiple onChange={handleFileChange} />
-                                    <label htmlFor="upload" className='cursor-pointer'>
-                                        <p className=' font-medium'>แนบไฟล์เพิ่มเติม:</p>
-                                        <div className={`mt-2 p-5 w-full h-full bg-gray-100 ${files.length > 0 ? "" : "flex flex-col"} justify-center items-center rounded-xl shadow border-4 border-dotted`}>
-                                            {uploadProgress > 0 ? (
-                                                <div className='flex flex-col items-center opacity-50 gap-2'>
-                                                    <div className='flex justify-center items-center '>
-                                                        <PulseLoader
-                                                            size={10}
-                                                            aria-label="Loading Spinner"
-                                                            color={`#5955B3`}
-                                                            className='z-10'
-                                                            speedMultiplier={1}
-                                                        />
-                                                    </div>
-                                                    <div className='text-xs'>{uploadProgress}%</div>
-                                                </div>
-                                            ) : (
-                                                files.length > 0 ? (
-                                                    files.map((file, index) => (
-                                                        <div key={index}>
-                                                            <div className={`${index > 0 ? "mt-3" : ""} relative flex gap-3 items-center p-3 rounded-lg bg-gray-200 shadow`}>
-                                                                <div
-                                                                    className='absolute top-0 right-0 cursor-pointer m-2'
-                                                                    onMouseDown={(e) => {
-                                                                        e.preventDefault();
-                                                                        e.stopPropagation();
-                                                                        handleDeleteFile(index);
-                                                                    }}>
-                                                                    <Icon path={mdiCloseCircle} size={1} className='text-red-500 ' />
-                                                                </div>
-                                                                <Image className='w-10 h-10 ' src="/image/documents/docx.png" height={1000} width={1000} priority alt={file.fileType} />
-                                                                <p className='text-ellipsis whitespace-nowrap overflow-hidden w-4/5'>{file.fileName}</p>
-                                                            </div>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <>
-                                                        <Icon path={mdiUploadCircle} size={1} className='text-gray-400' />
-                                                        <h1 className='font-medium'>Click to upload</h1>
-                                                        <p className='text-gray-400 text-sm'>Drag and drop files here</p>
-                                                    </>
-                                                )
-                                            )}
-                                        </div>
-                                    </label>
-                                </div>
                             ) : (
-                                <div className=''>
-                                    <label>
-                                        ไฟล์ที่ส่งต่อ:
-                                    </label>
-                                    <div className='mt-2 flex gap-5'>
-                                        {data?.fromSent[0]?.files.map((file, index) => (
-                                            <div key={index}>
-                                                <div className='cursor-pointer p-3 bg-gray-100 rounded-xl flex gap-3 items-center w-fit'>
-                                                    <Image className='w-5 h-5 ' src="/image/documents/docx.png" height={1000} width={1000} priority alt={file.fileType} />
-                                                    <p className='text-xs'>{file.fileName}.{file.fileType}</p>
-                                                </div>
-                                            </div>
-                                        ))}
+                                <div className='mt-2 w-96 flex items-center rounded-xl border border-gray-300 p-1'>
+                                    <div className='w-full'>
+                                        <Select
+                                            options={allEmail}
+                                            className="basic-multi-select"
+                                            classNamePrefix="select"
+                                            styles={{
+                                                control: (provided) => ({
+                                                    ...provided,
+                                                    border: 'none',
+                                                    boxShadow: 'none',
+                                                    width: '100%',
+                                                }),
+                                            }}
+                                            onChange={(selectedOptions) => {
+                                                const selectedEmail = selectedOptions ? selectedOptions.value : '';
+                                                setEmail(selectedEmail); // เนื่องจากเลือกได้เพียงตัวเดียว จะตั้งค่า selectedEmail แทนที่จะเป็น array
+                                            }}
+                                        />
                                     </div>
                                 </div>
                             )}
-                        </>
-                    ) : null
-                )}
+                        </div>
+                        <div className=''>
+                            <label>
+                                ข้อความ: <span className='text-red-500'> *</span>
+                            </label>
+                            <div className="mt-2 flex items-center rounded-xl border border-gray-300 p-2 ">
+                                <textarea
+                                    placeholder="ข้อความ..."
+                                    className="min-h-24 max-h-40 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow text-gray-700 w-full p-1 rounded-sm"
+                                    onChange={(e) => setReply(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                        {onReplyForm ? (
+                            <div>
+                                <input id="upload" type="file" hidden multiple onChange={handleFileChange} />
+                                <label htmlFor="upload" className='cursor-pointer'>
+                                    <p className=' font-medium'>แนบไฟล์เพิ่มเติม:</p>
+                                    <div className={`mt-2 p-5 w-full h-full bg-gray-100 ${files.length > 0 ? "" : "flex flex-col"} justify-center items-center rounded-xl shadow border-4 border-dotted`}>
+                                        {uploadProgress > 0 ? (
+                                            <div className='flex flex-col items-center opacity-50 gap-2'>
+                                                <div className='flex justify-center items-center '>
+                                                    <PulseLoader
+                                                        size={10}
+                                                        aria-label="Loading Spinner"
+                                                        color={`#5955B3`}
+                                                        className='z-10'
+                                                        speedMultiplier={1}
+                                                    />
+                                                </div>
+                                                <div className='text-xs'>{uploadProgress}%</div>
+                                            </div>
+                                        ) : (
+                                            files.length > 0 ? (
+                                                files.map((file, index) => (
+                                                    <div key={index}>
+                                                        <div className={`${index > 0 ? "mt-3" : ""} relative flex gap-3 items-center p-3 rounded-lg bg-gray-200 shadow`}>
+                                                            <div
+                                                                className='absolute top-0 right-0 cursor-pointer m-2'
+                                                                onMouseDown={(e) => {
+                                                                    e.preventDefault();
+                                                                    e.stopPropagation();
+                                                                    handleDeleteFile(index);
+                                                                }}>
+                                                                <Icon path={mdiCloseCircle} size={1} className='text-red-500 ' />
+                                                            </div>
+                                                            <Image className='w-10 h-10 ' src="/image/documents/docx.png" height={1000} width={1000} priority alt={file.fileType} />
+                                                            <p className='text-ellipsis whitespace-nowrap overflow-hidden w-4/5'>{file.fileName}</p>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <>
+                                                    <Icon path={mdiUploadCircle} size={1} className='text-gray-400' />
+                                                    <h1 className='font-medium'>Click to upload</h1>
+                                                    <p className='text-gray-400 text-sm'>Drag and drop files here</p>
+                                                </>
+                                            )
+                                        )}
+                                    </div>
+                                </label>
+                            </div>
+                        ) : (
+                            <div className=''>
+                                <label>
+                                    ไฟล์ที่ส่งต่อ:
+                                </label>
+                                <div className='mt-2 flex gap-5'>
+                                    {data?.fromSent[0]?.files.map((file, index) => (
+                                        <div key={index}>
+                                            <div className='cursor-pointer p-3 bg-gray-100 rounded-xl flex gap-3 items-center w-fit'>
+                                                <Image className='w-5 h-5 ' src="/image/documents/docx.png" height={1000} width={1000} priority alt={file.fileType} />
+                                                <p className='text-xs'>{file.fileName}.{file.fileType}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </>
+                ) : null}
+
                 {error ? (
                     <div className='text-red-500'>
                         * {error}

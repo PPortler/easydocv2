@@ -124,6 +124,8 @@ function Register() {
                                     className='w-full border border-black px-4 py-3 rounded-lg'
                                     type="text"
                                     placeholder='099-xxx-xxxx'
+                                    maxLength={10}
+                                    inputMode="numeric"
                                     onChange={(e) => setPhoneNumber(e.target.value)}
                                 />
                                 <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>เบอร์โทรศัพท์</p>
@@ -163,7 +165,7 @@ function Register() {
                             </div>
                         </div>
                         <div className='mt-5'>
-                            <button type='submit' className='bg-[#5955B3] text-white rounded-lg w-full p-2'>เข้าสู่ระบบ</button>
+                            <button type='submit' className='bg-[#5955B3] text-white rounded-lg w-full p-2'>สมัครสมาชิก</button>
                         </div>
                         <div className='mt-5 text-center'>
                             <p>มีบัญชีอยู่แล้ว?  <span><Link href="/login" className='text-red-400'>เข้าสู่ระบบ</Link></span></p>

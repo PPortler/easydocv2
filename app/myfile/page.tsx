@@ -53,7 +53,7 @@ function MyFile() {
 
     return (
         <div className="p-5 flex">
-            <Navbar status = "myfile" />
+            <Navbar status="myfile" />
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
                 <Navbar2 title="เอกสารของฉัน" />
 
@@ -73,27 +73,60 @@ function MyFile() {
                     </select>
                     <Icon path={mdiDotsVertical} size={.7} />
                 </div>
-
-                <div className=' mt-10 grid grid-cols-4 p-10 border rounded-3xl gap-5'>
-                    {files ? (
-                        files.map((file, index) => (
-                            <div key={index} className='justify-between items-center flex border rounded-xl p-4 bg-gray-100'>
-                                <div className='flex gap-3 text-ellipsis overflow-hidden whitespace-nowrap'>
-                                    <Icon path={mdiFileAccount} size={1} className='flex-shrink-0'/>
-                                    <p className=' text-ellipsis overflow-hidden whitespace-nowrap'>{file.fileName}</p>
-                                </div>
-                                <Icon path={mdiDotsVertical} size={1} className='flex-shrink-0'/>
+                <div className='mt-10 border p-10  rounded-3xl'>
+                    <p className='text-xl font-medium'>ไฟล์เริ่มต้น</p>
+                    <div className='my-5 grid grid-cols-4  gap-5'>
+                        <div className='justify-between items-center flex border rounded-xl p-4 bg-gray-100'>
+                            <div className='flex gap-3 text-ellipsis overflow-hidden whitespace-nowrap'>
+                                <Icon path={mdiFileAccount} size={1} className='flex-shrink-0' />
+                                <p className=' text-ellipsis overflow-hidden whitespace-nowrap'>แบบฟอร์มการลงทะเบียน</p>
                             </div>
-                        ))
-                    ) : (
-                        <p>ยังไม่มีไฟล์ที่อัพโหลด</p>
-                    )}
+                            <Icon path={mdiDotsVertical} size={1} className='flex-shrink-0' />
+                        </div>
+                        <div className='justify-between items-center flex border rounded-xl p-4 bg-gray-100'>
+                            <div className='flex gap-3 text-ellipsis overflow-hidden whitespace-nowrap'>
+                                <Icon path={mdiFileAccount} size={1} className='flex-shrink-0' />
+                                <p className=' text-ellipsis overflow-hidden whitespace-nowrap'>แบบฟอร์มขอรับทุน ก</p>
+                            </div>
+                            <Icon path={mdiDotsVertical} size={1} className='flex-shrink-0' />
+                        </div>
+                        <div className='justify-between items-center flex border rounded-xl p-4 bg-gray-100'>
+                            <div className='flex gap-3 text-ellipsis overflow-hidden whitespace-nowrap'>
+                                <Icon path={mdiFileAccount} size={1} className='flex-shrink-0' />
+                                <p className=' text-ellipsis overflow-hidden whitespace-nowrap'>แบบฟอร์มขอรับทุน ข</p>
+                            </div>
+                            <Icon path={mdiDotsVertical} size={1} className='flex-shrink-0' />
+                        </div>
+                        <div className='justify-between items-center flex border rounded-xl p-4 bg-gray-100'>
+                            <div className='flex gap-3 text-ellipsis overflow-hidden whitespace-nowrap'>
+                                <Icon path={mdiFileAccount} size={1} className='flex-shrink-0' />
+                                <p className=' text-ellipsis overflow-hidden whitespace-nowrap'>แบบฟอร์มสมัครงาน</p>
+                            </div>
+                            <Icon path={mdiDotsVertical} size={1} className='flex-shrink-0' />
+                        </div>
+                    </div>
+                    <hr />
+                    <div className='mt-5 grid grid-cols-4  gap-5'>
+                        {files ? (
+                            files.map((file, index) => (
+                                <div key={index} className='justify-between items-center flex border rounded-xl p-4 bg-gray-100'>
+                                    <div className='flex gap-3 text-ellipsis overflow-hidden whitespace-nowrap'>
+                                        <Icon path={mdiFileAccount} size={1} className='flex-shrink-0' />
+                                        <p className=' text-ellipsis overflow-hidden whitespace-nowrap'>{file.fileName}</p>
+                                    </div>
+                                    <Icon path={mdiDotsVertical} size={1} className='flex-shrink-0' />
+                                </div>
+                            ))
+                        ) : (
+                            <p>ยังไม่มีไฟล์ที่อัพโหลด</p>
+                        )}
 
+                    </div>
                 </div>
             </div>
             {loader && (
                 <div>
-                    <Loader/>
+                    <Loader />
                 </div>
             )}
             <AddFile email={`${session?.user?.email}`} id={`${session?.user?.idUser}`} />

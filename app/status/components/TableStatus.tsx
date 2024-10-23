@@ -90,20 +90,22 @@ function TableStatus({ email }: { email: string }) {
         }
     }
 
-    const rows = allSent.map((sent) => {
+    const rows = allSent
+        .map((sent) => {
+            const matchedSent = sent.fromSent.find((from) => from.email === email);
 
-        const matchedSent = sent.fromSent.find((from) => from.email === email);
+            const fileNames = matchedSent?.files?.map((file) => file.fileName).join(', ') || "N/A";
 
-        const fileNames = matchedSent?.files?.map(file => file.fileName).join(', ') || "N/A";
+            return createData(
+                { description: sent.header, email: sent.email },
+                sent.status,
+                fileNames,
+                matchedSent?.date || "N/A",
+                ""
+            );
+        })
+        .reverse();
 
-        return createData(
-            { description: sent.header, email: sent.email },
-            sent.status,
-            fileNames,
-            matchedSent?.date || "N/A",
-            ""
-        );
-    });
 
 
     const [timeLine, setTimeLine] = useState<Sents | undefined>(undefined);
@@ -133,24 +135,24 @@ function TableStatus({ email }: { email: string }) {
                     <Timeline timeLine={timeLine} />
                 </div>
                 <div className='flex justify-start mt-5'>
-                    <div className='flex flex-col gap-2'>
-                        <div className='flex gap-3 items-center'>
+                    <div className='flex flex-col gap-2 text-sm'>
+                        <div className='flex gap-2 items-center'>
                             <div
-                                className='w-5 h-5 bg-green-700 rounded-full shadow'
+                                className='w-4 h-4 bg-green-700 rounded-full shadow'
                             >
                             </div>
                             <p>ตอบกลับแล้ว</p>
                         </div>
-                        <div className='flex gap-3 items-center'>
+                        <div className='flex gap-2 items-center'>
                             <div
-                                className='w-5 h-5 bg-gray-400 rounded-full shadow'
+                                className='w-4 h-4 bg-gray-400 rounded-full shadow'
                             >
                             </div>
                             <p>รอการตอบกลับ</p>
                         </div>
-                        <div className='flex gap-3 items-center'>
+                        <div className='flex gap-2 items-center'>
                             <div
-                                className='w-5 h-5 bg-red-500 rounded-full shadow'
+                                className='w-4 h-4 bg-red-500 rounded-full shadow'
                             >
                             </div>
                             <p>ล้มเหลว</p>
@@ -162,120 +164,142 @@ function TableStatus({ email }: { email: string }) {
         ) : (
             <div className=''>
                 {allSent.length > 0 ? (
-                    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                        <TableContainer sx={{ maxHeight: 440 }} >
-                            <Table stickyHeader aria-label="sticky table">
-                                <TableHead>
-                                    <TableRow>
-                                        {columns.map((column) => (
-                                            <TableCell
-                                                key={column.id}
-                                                align="center"
-                                                style={{ minWidth: column.minWidth }}
-                                            >
-                                                {column.label}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </TableHead>
-                                <TableBody>
-                                    {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, rowIndex) => (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                                            {columns.map((column) => {
-                                                const value = row[column.id as keyof Data];
-
-                                                // แสดงค่า user
-                                                if (column.id === 'user' && typeof value === 'object' && value !== null) {
-                                                    const teacher = value as { email: string; description: string };
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            <div className="flex gap-2 items-center">
-                                                                <Icon path={mdiAccountCircle} size={2.5} />
-                                                                <div className='flex flex-col'>
-                                                                    <p className='font-bold text-md'>{teacher.description}</p>
-                                                                    <p className="text-gray-400 text-xs">{teacher.email}</p>
-                                                                </div>
-                                                            </div>
-                                                        </TableCell>
-                                                    );
-                                                }
-
-                                                // แสดงค่า status
-                                                if (column.id === 'status' && typeof value === 'string') {
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            <div className="flex justify-center items-center">
-                                                                {value === "validate" || value === "wait" ? (
-                                                                    <div className='py-1 px-4 rounded-2xl bg-gray-200'>
-                                                                        <h1 className='text-ellipsis whitespace-nowrap ove'>รอการตอบกลับ</h1>
-                                                                    </div>
-                                                                ) : (value === "faild") ? (
-                                                                    <div className='py-1 px-4 rounded-2xl bg-red-400'>
-                                                                        <h1 className='text-ellipsis whitespace-nowrap ove'>ล้มเหลว</h1>
-                                                                    </div>
-                                                                ) : (
-                                                                    <div className='py-1 px-4 rounded-2xl bg-[#D4F8D3]'>
-                                                                        <h1 className='text-ellipsis whitespace-nowrap ove'>สำเร็จ</h1>
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        </TableCell>
-                                                    );
-                                                }
-
-                                                // แสดงค่า files
-                                                if (column.id === 'files' && Array.isArray(value)) {
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            <div className="flex justify-center items-center">
-                                                                <div className='py-1 px-4 rounded-2xl flex text-center'>
-                                                                    {value.map((f) => (
-                                                                        <h1>{value}</h1>
-                                                                    ))}
-                                                                </div>
-                                                            </div>
-                                                        </TableCell>
-                                                    );
-                                                }
-
-                                                // แสดงค่า detail และตั้งค่าฟังก์ชัน onClick
-                                                if (column.id === 'detail' && typeof value === 'string') {
-                                                    return (
-                                                        <TableCell key={column.id} align={column.align}>
-                                                            <div
-                                                                onClick={() => setTimeLine(allSent[rowIndex])}
-                                                                className='cursor-pointer flex justify-center items-center'
-                                                            >
-                                                                <div className="py-1 px-3 rounded-md bg-[#FFF0BB]">
-                                                                    <Icon path={mdiStar} size={1} className="text-[#FFAC33]" />
-                                                                </div>
-                                                            </div>
-                                                        </TableCell>
-                                                    );
-                                                }
-
-                                                return (
-                                                    <TableCell key={column.id} align='center'>
-                                                        {typeof value === 'string' ? value : ''}
-                                                    </TableCell>
-                                                );
-                                            })}
+                    <div>
+                        <div className='mb-3 flex gap-5 justify-end text-gray-600 text-xs'>
+                            <div className='flex gap-2 items-center'>
+                                <div className='w-3 h-3 rounded-full bg-gray-400'></div>
+                                <p className=''>รอการตอบกลับ</p>
+                            </div>
+                            <div className='flex gap-2 items-center'>
+                                <div className='w-3 h-3 rounded-full bg-green-300'></div>
+                                <p className=''>ได้รับการตอบกลับแล้ว</p>
+                            </div>
+                        </div>
+                        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                            <TableContainer sx={{ maxHeight: 440 }} >
+                                <Table stickyHeader aria-label="sticky table">
+                                    <TableHead>
+                                        <TableRow>
+                                            {columns.map((column) => (
+                                                <TableCell
+                                                    key={column.id}
+                                                    align="center"
+                                                    style={{ minWidth: column.minWidth }}
+                                                >
+                                                    {column.label}
+                                                </TableCell>
+                                            ))}
                                         </TableRow>
-                                    ))}
-                                </TableBody>
+                                    </TableHead>
+                                    <TableBody>
+                                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, rowIndex) => {
+                                            const reverseIndex = rows.length - 1 - (page * rowsPerPage + rowIndex);
+                                            return (
 
-                            </Table>
-                        </TableContainer>
-                        <TablePagination
-                            rowsPerPageOptions={[10, 25, 100]}
-                            component="div"
-                            count={rows.length}
-                            rowsPerPage={rowsPerPage}
-                            page={page}
-                            onPageChange={handleChangePage}
-                            onRowsPerPageChange={handleChangeRowsPerPage}
-                        />
-                    </Paper>
+                                                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                                                    {columns.map((column) => {
+                                                        const value = row[column.id as keyof Data];
+
+                                                        // แสดงค่า user
+                                                        if (column.id === 'user' && typeof value === 'object' && value !== null) {
+                                                            const teacher = value as { email: string; description: string };
+                                                            return (
+                                                                <TableCell key={column.id} align={column.align}>
+                                                                    <div className="flex gap-2 items-center">
+                                                                        <Icon path={mdiAccountCircle} size={2.5} />
+                                                                        <div className='flex flex-col'>
+                                                                            <p className='font-bold text-md'>{teacher.description}</p>
+                                                                            <p className="text-gray-400 text-xs">{teacher.email}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </TableCell>
+                                                            );
+                                                        }
+
+                                                        // แสดงค่า status
+                                                        if (column.id === 'status' && typeof value === 'string') {
+                                                            return (
+                                                                <TableCell key={column.id} align={column.align}>
+                                                                    <div className="flex justify-center items-center">
+                                                                        {value === "validate" || value === "wait" ? (
+                                                                            <div className='py-1 px-4 rounded-2xl bg-gray-200'>
+                                                                                <h1 className='text-ellipsis whitespace-nowrap ove'>รอการตอบกลับ</h1>
+                                                                            </div>
+                                                                        ) : (value === "faild") ? (
+                                                                            <div className='py-1 px-4 rounded-2xl bg-red-400'>
+                                                                                <h1 className='text-ellipsis whitespace-nowrap ove'>ล้มเหลว</h1>
+                                                                            </div>
+                                                                        ) : (
+                                                                            <div className='py-1 px-4 rounded-2xl bg-[#D4F8D3]'>
+                                                                                <h1 className='text-ellipsis whitespace-nowrap ove'>ตอบกลับแล้ว</h1>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                </TableCell>
+                                                            );
+                                                        }
+
+                                                        // แสดงค่า files
+                                                        if (column.id === 'files' && Array.isArray(value)) {
+                                                            return (
+                                                                <TableCell key={column.id} align={column.align}>
+                                                                    <div className="flex justify-center items-center">
+                                                                        <div className='py-1 px-4 rounded-2xl flex text-center'>
+                                                                            {value.map((f) => (
+                                                                                <h1>{value}</h1>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                </TableCell>
+                                                            );
+                                                        }
+
+                                                        // แสดงค่า detail และตั้งค่าฟังก์ชัน onClick
+                                                        if (column.id === 'detail' && typeof value === 'string') {
+                                                            return (
+                                                                <TableCell key={column.id} align={column.align} className='relative'>
+                                                                    <div
+                                                                        onClick={() => setTimeLine(allSent[reverseIndex])}
+                                                                        className='cursor-pointer flex justify-center items-center'
+                                                                    >
+                                                                        <div className="py-1 px-3 rounded-md bg-[#FFF0BB]">
+                                                                            <Icon path={mdiStar} size={1} className="text-[#FFAC33]" />
+                                                                        </div>
+                                                                    </div>
+                                                                    {allSent[reverseIndex]?.status === "validate" ? (
+                                                                        <div className='w-3 h-3 rounded-full bg-gray-400 absolute top-0 right-0 m-4'></div>
+
+                                                                    ) : (
+                                                                        <div className='w-3 h-3 rounded-full bg-green-300 absolute top-0 right-0 m-4'></div>
+                                                                    )}
+                                                                </TableCell>
+                                                            );
+                                                        }
+
+                                                        return (
+                                                            <TableCell key={column.id} align='center'>
+                                                                {typeof value === 'string' ? value : ''}
+                                                            </TableCell>
+                                                        );
+                                                    })}
+                                                </TableRow>
+                                            )
+                                        })}
+                                    </TableBody>
+
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+                                rowsPerPageOptions={[10, 25, 100]}
+                                component="div"
+                                count={rows.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onPageChange={handleChangePage}
+                                onRowsPerPageChange={handleChangeRowsPerPage}
+                            />
+                        </Paper>
+                    </div>
                 ) : (
                     <div className='flex justify-center'>
                         <div className='bg-gray-200 py-2 px-4 rounded-xl text-black w-fit'>

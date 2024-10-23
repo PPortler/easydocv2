@@ -65,6 +65,16 @@ const AddFile = ({ email, id }: { email: String, id: String }) => {
                                     title: 'สำเร็จ',
                                     text: `อัพโหลดไฟล์ ${fileName} สำเร็จ`,
                                 }).then(() => {
+                                    setLoader(false);
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'เกิดข้อผิดพลาด',
+                                    text: `กรุณาลองใหม่ในภายหลัง`,
+                                }).then(() => {
+                                    setLoader(false);
                                     window.location.reload();
                                 });
                             }
