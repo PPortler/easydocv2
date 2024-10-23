@@ -14,8 +14,8 @@ export default function Home() {
         <Navbar />
         <div className="mt-10 flex justify-center items-center gap-72">
           <div className="flex flex-col gap-5 h-fit">
-            <h1 className="text-5xl font-bold">ระบบ </h1>
-            <h1 className="text-5xl font-bold">จัดการเอกสาร </h1>
+            <h1 className="text-5xl font-bold text-gray-700">เว็บไซต์ <br />ระบบจัดการเอกสาร</h1>
+            <p className="text-gray-500">จัดเก็บทุกเอกสารให้เป็นเรื่องง่าย</p>
             <Link href="register" className="bg-[#5955B3] w-fit text-white py-3 px-6 rounded-lg">สมัครสมาชิก</Link>
           </div>
           <Image className="w-96 h-96" src="/image/main/poster.png" height={1000} width={1000} priority alt="poster"></Image>

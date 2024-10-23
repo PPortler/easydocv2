@@ -7,16 +7,23 @@ import { useState, useEffect } from 'react'
 import Loader from '../component/Loader'
 import TableMailbox from './components/TableMailbox'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
 
 function MailBox() {
 
     const [loader, setLoader] = useState<boolean>(false);
 
-    const { data: session, status } = useSession();
+    const { status, data: session } = useSession();
+    const router = useRouter();
 
     useEffect(() => {
         if (status === 'loading') {
             return;
+        }
+
+        if (!session) {
+            router.replace('/login')
+            setLoader(false);
         }
 
         if (!session?.user?.email){

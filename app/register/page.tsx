@@ -8,6 +8,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation'
 import Loader from '../component/Loader'
+import LoginWith from '../component/LoginWith'
 
 function Register() {
 
@@ -171,17 +172,7 @@ function Register() {
                             <hr className='w-full' />
                             <p className='text-gray-400 px-1 bg-white absolute top-[-8px]'>เข้าสู่ระบบด้วย</p>
                         </div>
-                        <div className='mt-8 grid grid-cols-3 gap-3'>
-                            <div className='border rounded-lg p-2 flex justify-center px-10'>
-                                <Image className='w-7 h-7' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
-                            </div>
-                            <div className='border rounded-lg p-2 flex justify-center px-10'>
-                                <Image className='w-7 h-7' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
-                            </div>
-                            <div className='border rounded-lg p-2 flex justify-center px-10'>
-                                <Image className='w-7 h-7' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
-                            </div>
-                        </div>
+                        <LoginWith />
                     </form>
                 </div>
             </div>

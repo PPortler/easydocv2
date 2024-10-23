@@ -8,6 +8,7 @@ import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import Loader from '../component/Loader'
+import LoginWith from '../component/LoginWith'
 
 function Login() {
 
@@ -83,7 +84,7 @@ function Login() {
             </div>
             <div className='w-7/12 bg-white shadow-xl rounded-3xl min-h-screen flex justify-center items-center flex-col'>
                 <div className='w-6/12'>
-                    <h1 className='text-[#5955B3] text-3xl font-medium'>เช้าสู่ระบบ</h1>
+                    <h1 className='text-[#5955B3] text-3xl font-medium'>เข้าสู่ระบบ</h1>
                     <p className='mt-2 text-[#5955B3] font-light'>เข้าสู่ระบบเพื่อเข้าถึงบัญชี easydoc ของคุณ</p>
                     <form onSubmit={handleSubmit} className='mt-10'>
                         <div className='relative '>
@@ -125,17 +126,7 @@ function Login() {
                             <hr className='w-full' />
                             <p className='text-gray-400 px-1 bg-white absolute top-[-8px]'>เข้าสู่ระบบด้วย</p>
                         </div>
-                        <div className='mt-8 grid grid-cols-3 gap-3'>
-                            <div className='border rounded-lg p-2 flex justify-center px-10'>
-                                <Image className='w-7 h-7' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
-                            </div>
-                            <div className='border rounded-lg p-2 flex justify-center px-10'>
-                                <Image className='w-7 h-7' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
-                            </div>
-                            <div className='border rounded-lg p-2 flex justify-center px-10'>
-                                <Image className='w-7 h-7' src="/image/LoginRegister/posterLogin.png" height={1000} width={1000} priority alt="posterLogin"></Image>
-                            </div>
-                        </div>
+                        <LoginWith />
                     </form>
                 </div>
             </div>

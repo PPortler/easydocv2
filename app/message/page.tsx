@@ -7,10 +7,32 @@ import { useState } from 'react'
 import Loader from '../component/Loader'
 import Icon from '@mdi/react';
 import { mdiAccountCircle } from '@mdi/js';
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 function Message() {
 
     const [loader, setLoader] = useState<boolean>(false);
+
+    const { status, data: session } = useSession();
+    const router = useRouter();
+
+    useEffect(() => {
+        if (status === 'loading') {
+            return;
+        }
+
+        if (!session) {
+            router.replace('/login')
+            setLoader(false);
+        }
+
+        if (!session?.user?.email){
+            return
+        }
+    }, [session])
+
     return (
         <div className="p-5 flex">
             <Navbar status="message"/>

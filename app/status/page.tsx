@@ -7,20 +7,30 @@ import { useState,useEffect } from 'react'
 import Loader from '../component/Loader'
 import TableStatus from './components/TableStatus'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 function Status() {
 
-    const { data: session, status } = useSession();
     const [loader, setLoader] = useState<boolean>(false);
 
+    const { status, data: session } = useSession();
+    const router = useRouter();
+
     useEffect(() => {
-        if(status === 'loading'){
+        if (status === 'loading') {
             return;
         }
 
-        setLoader(false);
+        if (!session) {
+            router.replace('/login')
+            setLoader(false);
+        }
 
-    },[session])    
+        if (!session?.user?.email){
+            return
+        }
+    }, [session])
+
     return (
         <div className="p-5 flex">
             <Navbar status="status" />
