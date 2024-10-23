@@ -27,14 +27,10 @@ export async function GET(req) {
         const mailBox = results.map(box => ({
             email: box.email,
             idSent: box.idSent,
-            files: box.files,
             header: box.header,
             type: box.type,
-            detail: box.detail,
-            date: box.date,
-            time: box.time,
             status: box.status,
-            from: box.from
+            fromSent: box.fromSent
         }));
 
         // ส่งผลลัพธ์กลับไป

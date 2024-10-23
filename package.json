@@ -12,6 +12,7 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@firebase/storage": "^0.13.2",
+    "@fontsource-variable/noto-sans-thai": "^5.1.0",
     "@mdi/js": "^7.4.47",
     "@mdi/react": "^1.6.1",
     "@mui/lab": "^6.0.0-beta.11",

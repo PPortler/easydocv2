@@ -55,10 +55,10 @@ function MyFile() {
         <div className="p-5 flex">
             <Navbar status = "myfile" />
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
-                <Navbar2 title="My File" />
+                <Navbar2 title="เอกสารของฉัน" />
 
                 <form className='flex gap-3 items-center justify-center mt-10'>
-                    <p className='text-[#585858] text-xl'>Search</p>
+                    <p className='text-[#585858] text-xl'>ค้นหา</p>
                     <input
                         type="text"
                         className='border border-black py-1 px-4 rounded-lg w-96'
@@ -69,7 +69,7 @@ function MyFile() {
                 <div className='mt-20 flex justify-end gap-5 items-center'>
                     <Icon path={mdiArrowDown} size={.7} />
                     <select>
-                        <option value="lastmodified">Last modified by me</option>
+                        <option value="lastmodified">เรียงจากล่าสุด</option>
                     </select>
                     <Icon path={mdiDotsVertical} size={.7} />
                 </div>
@@ -86,7 +86,7 @@ function MyFile() {
                             </div>
                         ))
                     ) : (
-                        <p>No files available</p>
+                        <p>ยังไม่มีไฟล์ที่อัพโหลด</p>
                     )}
 
                 </div>

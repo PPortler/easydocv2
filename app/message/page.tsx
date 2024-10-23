@@ -15,7 +15,7 @@ function Message() {
         <div className="p-5 flex">
             <Navbar status="message"/>
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
-                <Navbar2 title="Message" />
+                <Navbar2 title="ข้อความ" />
                 <div className='flex flex-col gap-5 items-center mt-10'>
                    
                 </div>

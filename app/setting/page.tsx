@@ -37,7 +37,7 @@ function Setting() {
         <div className="p-5 flex">
             <Navbar status="setting" />
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
-                <Navbar2 title="Setting" />
+                <Navbar2 title="ตั้งค่า" />
                 <div className='mt-10 flex gap-10'>
                     <NavbarSetting />
                     <Container idUser={`${session?.user?.idUser}`}/>

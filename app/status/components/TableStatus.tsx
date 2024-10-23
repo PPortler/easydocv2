@@ -24,15 +24,15 @@ interface Column {
     format?: (value: number) => string;
 }
 const columns: readonly Column[] = [
-    { id: 'user', label: 'User', minWidth: 170 },
-    { id: 'status', label: 'Status', minWidth: 100 },
-    { id: 'files', label: 'Files', minWidth: 170 },
-    { id: 'date', label: 'Date', minWidth: 170 },
-    { id: 'detail', label: 'Detail', minWidth: 170 },
+    { id: 'user', label: 'อีเมล', minWidth: 170 },
+    { id: 'status', label: 'สถานะ', minWidth: 100 },
+    { id: 'files', label: 'ไฟล์', minWidth: 170 },
+    { id: 'date', label: 'วันที่ส่ง', minWidth: 170 },
+    { id: 'detail', label: 'รายละเอียด', minWidth: 170 },
 ];
 
 interface Data {
-    user: { email: string; description: string },
+    user: { description: string; email: string; },
     status: string;
     files: string,
     date: string;
@@ -43,14 +43,18 @@ interface Sents {
     files: [{ fileName: string, fileType: string, fileURL: string }];
     email: string;
     header: string;
-    detail: string;
     status: string;
-    date: string;
-    from: [{ email: string, time: string, date: string }];
+    fromSent: [{
+        email: string,
+        time: string,
+        date: string,
+        files: [{ fileName: string, fileType: string, fileURL: string }],
+        detail: string;
+    }];
 }
 
 function createData(
-    user: { email: string; description: string },
+    user: { description: string; email: string; },
     status: string,
     files: string,
     date: string,
@@ -87,18 +91,16 @@ function TableStatus({ email }: { email: string }) {
     }
 
     const rows = allSent.map((sent) => {
-        // ตรวจสอบว่า sent.files เป็นอาร์เรย์
-        const fileNames: string[] = Array.isArray(sent.files)
-            ? sent.files.map(file => file.fileName + "." + file.fileType) // เก็บชื่อไฟล์ในอาร์เรย์
-            : []; // ใช้อาร์เรย์ว่างถ้าไม่ใช่อาร์เรย์
 
-        const date = sent.from?.[0]?.date || 'N/A'; 
+        const matchedSent = sent.fromSent.find((from) => from.email === email);
+
+        const fileNames = matchedSent?.files?.map(file => file.fileName).join(', ') || "N/A";
 
         return createData(
-            { email: sent.email, description: sent.header },
+            { description: sent.header, email: sent.email },
             sent.status,
-            fileNames.join(', '),
-            date,
+            fileNames,
+            matchedSent?.date || "N/A",
             ""
         );
     });
@@ -137,21 +139,21 @@ function TableStatus({ email }: { email: string }) {
                                 className='w-5 h-5 bg-green-700 rounded-full shadow'
                             >
                             </div>
-                            <p>Success</p>
+                            <p>ตอบกลับแล้ว</p>
                         </div>
                         <div className='flex gap-3 items-center'>
                             <div
                                 className='w-5 h-5 bg-gray-400 rounded-full shadow'
                             >
                             </div>
-                            <p>Wait</p>
+                            <p>รอการตอบกลับ</p>
                         </div>
                         <div className='flex gap-3 items-center'>
                             <div
                                 className='w-5 h-5 bg-red-500 rounded-full shadow'
                             >
                             </div>
-                            <p>Failed</p>
+                            <p>ล้มเหลว</p>
                         </div>
 
                     </div>
@@ -189,9 +191,9 @@ function TableStatus({ email }: { email: string }) {
                                                         <TableCell key={column.id} align={column.align}>
                                                             <div className="flex gap-2 items-center">
                                                                 <Icon path={mdiAccountCircle} size={2.5} />
-                                                                <div>
-                                                                    <h1>{teacher.email}</h1>
-                                                                    <p className="text-gray-400">{teacher.description}</p>
+                                                                <div className='flex flex-col'>
+                                                                    <p className='font-bold text-md'>{teacher.description}</p>
+                                                                    <p className="text-gray-400 text-xs">{teacher.email}</p>
                                                                 </div>
                                                             </div>
                                                         </TableCell>
@@ -205,7 +207,7 @@ function TableStatus({ email }: { email: string }) {
                                                             <div className="flex justify-center items-center">
                                                                 {value === "validate" || value === "wait" ? (
                                                                     <div className='py-1 px-4 rounded-2xl bg-gray-200'>
-                                                                        <h1 className='text-ellipsis whitespace-nowrap ove'>รอการตรวจตอบกลับ</h1>
+                                                                        <h1 className='text-ellipsis whitespace-nowrap ove'>รอการตอบกลับ</h1>
                                                                     </div>
                                                                 ) : (value === "faild") ? (
                                                                     <div className='py-1 px-4 rounded-2xl bg-red-400'>
@@ -227,7 +229,9 @@ function TableStatus({ email }: { email: string }) {
                                                         <TableCell key={column.id} align={column.align}>
                                                             <div className="flex justify-center items-center">
                                                                 <div className='py-1 px-4 rounded-2xl flex text-center'>
-                                                                    <h1>{value.join(', ')}</h1> {/* แสดงชื่อไฟล์ที่แปลงเป็นสตริง */}
+                                                                    {value.map((f) => (
+                                                                        <h1>{value}</h1>
+                                                                    ))}
                                                                 </div>
                                                             </div>
                                                         </TableCell>

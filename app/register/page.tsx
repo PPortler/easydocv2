@@ -83,27 +83,27 @@ function Register() {
             </div>
             <div className='w-7/12 bg-white shadow-xl rounded-3xl min-h-screen flex justify-center items-center flex-col'>
                 <div className='w-6/12'>
-                    <h1 className='text-[#5955B3] text-3xl font-medium'>Register</h1>
-                    <p className='mt-2 text-[#5955B3] font-light'>Let’s get you all st up so you can access your personal account.</p>
+                    <h1 className='text-[#5955B3] text-3xl font-medium'>สมัครสมาชิก</h1>
+                    <p className='mt-2 text-[#5955B3] font-light'>มาเตรียมตัวให้พร้อมเพื่อให้คุณสามารถเข้าถึงบัญชีส่วนตัวของคุณได้.</p>
                     <form onSubmit={handleSubmit} className='mt-10'>
                         <div className='flex gap-5'>
                             <div className='relative w-full '>
                                 <input
                                     className='w-full border border-black px-4 py-3 rounded-lg'
                                     type="text"
-                                    placeholder='Enter your email'
+                                    placeholder='กรอกชื่อ'
                                     onChange={(e) => setFirstName(e.target.value)}
                                 />
-                                <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>First Name</p>
+                                <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>ชื่อ</p>
                             </div>
                             <div className='relative w-full '>
                                 <input
                                     className='w-full border border-black px-4 py-3 rounded-lg'
                                     type="text"
-                                    placeholder='Enter your email'
+                                    placeholder='กรอกนามสกุล'
                                     onChange={(e) => setLastName(e.target.value)}
                                 />
-                                <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Last Name</p>
+                                <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>นามสกุล</p>
                             </div>
                         </div>
                         <div className='flex gap-5 mt-5'>
@@ -122,54 +122,54 @@ function Register() {
                                 <input
                                     className='w-full border border-black px-4 py-3 rounded-lg'
                                     type="text"
-                                    placeholder='Enter your email'
+                                    placeholder='099-xxx-xxxx'
                                     onChange={(e) => setPhoneNumber(e.target.value)}
                                 />
-                                <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Phone Number</p>
+                                <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>เบอร์โทรศัพท์</p>
                             </div>
                         </div>
                         <div className='relative mt-5 '>
                             <input
                                 className='w-full border border-black px-4 py-3 rounded-lg'
                                 type="text"
-                                placeholder='Enter your email'
+                                placeholder='example@gmail.com'
                                 onChange={(e) => setEmail(e.target.value)}
                             />
-                            <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Email</p>
+                            <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>อีเมล</p>
                         </div>
                         <div className='relative mt-5'>
                             <input
                                 className='w-full border border-black px-4 py-3 rounded-lg'
                                 type="password"
-                                placeholder='Enter your password'
+                                placeholder='สร้างรหัสผ่าน'
                                 onChange={(e) => setPassword(e.target.value)}
                             />
-                            <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Password</p>
+                            <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>รหัสผ่าน</p>
                         </div>
                         <div className='relative mt-5'>
                             <input
                                 className='w-full border border-black px-4 py-3 rounded-lg'
                                 type="password"
-                                placeholder='Enter your password'
+                                placeholder='ใส่รหัสผ่านอีกครั้ง'
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                             />
-                            <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>Confirm Password</p>
+                            <p className='absolute top-[-9px] left-[12px] bg-white px-1 text-xs text-gray-500'>ยืนยันรหัสผ่าน</p>
                         </div>
                         <div className='mt-5 flex justify-between text-sm'>
                             <div className='flex gap-2 items-center'>
                                 <input id='agreement' type="checkbox" />
-                                <p className=''>I agree to all the <span className='text-red-400'>Terms</span> and <span className='text-red-400'>Privacy Policies</span> </p>
+                                <p className=''>ฉันเห็นด้วยทุกประการ <span className='text-red-400'>เงื่อนไข</span> และ <span className='text-red-400'>นโยบายความเป็นส่วนตัว</span> </p>
                             </div>
                         </div>
                         <div className='mt-5'>
-                            <button type='submit' className='bg-[#5955B3] text-white rounded-lg w-full p-2'>Login</button>
+                            <button type='submit' className='bg-[#5955B3] text-white rounded-lg w-full p-2'>เข้าสู่ระบบ</button>
                         </div>
                         <div className='mt-5 text-center'>
-                            <p>Already have an account?  <span><Link href="/login" className='text-red-400'>Login</Link></span></p>
+                            <p>มีบัญชีอยู่แล้ว?  <span><Link href="/login" className='text-red-400'>เข้าสู่ระบบ</Link></span></p>
                         </div>
                         <div className='mt-10 text-xs relative flex flex-col items-center justify-center'>
                             <hr className='w-full' />
-                            <p className='text-gray-400 px-1 bg-white absolute top-[-8px]'>Or login with</p>
+                            <p className='text-gray-400 px-1 bg-white absolute top-[-8px]'>เข้าสู่ระบบด้วย</p>
                         </div>
                         <div className='mt-8 grid grid-cols-3 gap-3'>
                             <div className='border rounded-lg p-2 flex justify-center px-10'>

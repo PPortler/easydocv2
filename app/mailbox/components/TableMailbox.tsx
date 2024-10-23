@@ -25,11 +25,11 @@ interface Column {
     format?: (value: number) => string;
 }
 const columns: readonly Column[] = [
-    { id: 'user', label: 'User', minWidth: 170 },
-    { id: 'files', label: 'Files', minWidth: 100 },
-    { id: 'date', label: 'Date', minWidth: 170 },
-    { id: 'time', label: 'Time', minWidth: 170 },
-    { id: 'detail', label: 'Detail', minWidth: 170 },
+    { id: 'user', label: 'อีเมล', minWidth: 170 },
+    { id: 'files', label: 'ไฟล์', minWidth: 100 },
+    { id: 'date', label: 'วันที่', minWidth: 170 },
+    { id: 'time', label: 'เวลา', minWidth: 170 },
+    { id: 'detail', label: 'รายละเอียด', minWidth: 170 },
 ];
 
 interface Data {
@@ -43,14 +43,16 @@ interface Data {
 interface MailBox {
     email: string;
     idSent: string;
-    files: [{ fileName: string, fileType: string, fileURL: string }];
     header: string;
-    detail: string;
-    date: string;
-    type: string;
-    time: string;
-    from: string;
     status: boolean;
+    type: string;
+    fromSent: [{
+        email: string,
+        time: string,
+        date: string,
+        files: [{ fileName: string, fileType: string, fileURL: string }],
+        detail: string;
+    }];
 }
 
 function createData(
@@ -62,7 +64,6 @@ function createData(
 ): Data {
     return { user, files, time, date, detail };
 }
-
 
 function TableMailbox({ email }: { email: string }) {
 
@@ -90,21 +91,22 @@ function TableMailbox({ email }: { email: string }) {
         }
     }
 
-    const rows = allMailbox.map((mailBox) => {
+    const rows = allMailbox
+        .map((mailBox) => {
+            // เข้าถึงตัวแรกของ fromSent หรือเปลี่ยนเป็นตัวสุดท้ายได้
+            const sentTemp = mailBox.fromSent[mailBox.fromSent.length - 1]; // หรือ mailBox.fromSent[mailBox.fromSent.length - 1]
 
-        // ตรวจสอบว่า sent.files เป็นอาร์เรย์
-        const fileNames: string[] = Array.isArray(mailBox.files)
-            ? mailBox.files.map(file => file.fileName + "." + file.fileType) // เก็บชื่อไฟล์ในอาร์เรย์
-            : []; // ใช้อาร์เรย์ว่างถ้าไม่ใช่อาร์เรย์
+            const fileNames = sentTemp?.files?.map(file => file.fileName).join(', ') || "N/A";
 
-        return createData(
-            { email: mailBox.from, description: mailBox.header },
-            fileNames.join(', '),
-            mailBox.date,
-            mailBox.time,
-            ""
-        );
-    });
+            return createData(
+                { email: sentTemp?.email || "N/A", description: mailBox.header },
+                fileNames,
+                sentTemp?.date || "N/A",
+                sentTemp?.time || "N/A",
+                ""
+            );
+        });
+
 
     //table
     const [page, setPage] = React.useState(0);
@@ -128,9 +130,11 @@ function TableMailbox({ email }: { email: string }) {
                 <div>
                     <div onClick={() => setOnDetail(undefined)} className='flex gap-3 cursor-pointer'>
                         <Icon path={mdiArrowLeftCircle} size={1} />
-                        <p className='text-gray-500'>ข้อความจาก: {onDetail.from}</p>
+                        <p className='text-gray-500'>
+                            ข้อความจาก: {onDetail?.fromSent?.length > 0 ? `${onDetail.fromSent[onDetail?.fromSent.length - 1]?.email}` : "ไม่มีข้อมูล"}
+                        </p>
                     </div>
-                    <Reply data={onDetail} />
+                    <Reply data={onDetail} emailSession={email} />
                 </div>
             ) : (
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
@@ -163,8 +167,8 @@ function TableMailbox({ email }: { email: string }) {
                                                         <div className="flex gap-2 items-center">
                                                             <Icon path={mdiAccountCircle} size={2.5} />
                                                             <div>
-                                                                <h1>{teacher.email}</h1>
-                                                                <p className="text-gray-400">{teacher.description}</p>
+                                                                <p className='font-bold text-md'>{teacher.description}</p>
+                                                                <p className="text-gray-400 text-xs">{teacher.email}</p>
                                                             </div>
                                                         </div>
                                                     </TableCell>

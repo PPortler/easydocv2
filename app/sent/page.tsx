@@ -32,7 +32,7 @@ function Sent() {
         <div className="p-5 flex">
             <Navbar status="sent" />
             <div className=" bg-white rounded-3xl p-10 min-h-screen w-full">
-                <Navbar2 title="Sent Files" />
+                <Navbar2 title="ส่งเอกสาร" />
                 <FormSent setLoader={setLoader} />
             </div>
             {loader && (

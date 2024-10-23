@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Icon from '@mdi/react';
-import { mdiAccountCircle, mdiCloseCircle } from '@mdi/js';
+import { mdiCog,mdiUploadCircle,mdiPen,mdiTag,mdiEmail,mdiSitemap, mdiCloseCircle } from '@mdi/js';
 import axios from 'axios'
 import { useSession } from 'next-auth/react'
 import PulseLoader from "react-spinners/PulseLoader";
@@ -25,12 +25,6 @@ interface File {
     fileName: string;
     fileType: string;
     fileURL: string;
-}
-
-interface FromEmail {
-    email: string;
-    time: string;
-    date: string;
 }
 
 interface FormSentProps {
@@ -174,7 +168,7 @@ function FormSent({ setLoader }: FormSentProps) {
         const time = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }); // เช่น 08:30
         const date = now.toISOString().split('T')[0]; // เช่น 2024-12-19
     
-        const fromEmailObject = { email: fromEmailDefault, time, date }; // สร้างอ็อบเจ็กต์
+        const fromSent = { email: fromEmailDefault, time, date, files: files, detail: detail }; 
 
         let checkStatus = false;
         try {
@@ -183,12 +177,10 @@ function FormSent({ setLoader }: FormSentProps) {
                 const res = await axios.post(
                     `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/sent`, {
                     email: e,
-                    files: files,
                     header: header,
                     type: type,
-                    detail: detail,
                     status: "validate",
-                    fromEmail: fromEmailObject
+                    fromSent: fromSent
                 }
                 );
 
@@ -199,14 +191,10 @@ function FormSent({ setLoader }: FormSentProps) {
                         `${process.env.NEXT_PUBLIC_BASE_API_URL}/api/mailBox`, { // ใช้ sentId
                         email: e,
                         idSent: sentId,
-                        files: files,
                         header: header,
                         type: type,
-                        detail: detail,
-                        date: date,
-                        time: time,
                         status: false,
-                        fromEmail: session?.user?.email
+                        fromSent: fromSent
                     }
                     ).then(() => {
                         checkStatus = true;
@@ -251,27 +239,27 @@ function FormSent({ setLoader }: FormSentProps) {
             {allEmail.length > 0 ? (
                 <form onSubmit={handleSubmit} className='lg:grid-cols-2 mt-10 grid grid-cols-1 gap-x-14'>
                     <div>
-                        <h1 className='font-medium'>Sent Type</h1>
-                        <p className='text-sm text-gray-400'>Please select Sent Type to Create Sent Document Form</p>
+                        <h1 className='font-medium'>ประเภทการส่ง</h1>
+                        <p className='text-sm text-gray-400'>โปรดเลือกประเภทการส่งเพื่อสร้างแบบฟอร์มเอกสารที่ส่ง</p>
                         <div className='mt-6 grid grid-cols-2 gap-4'>
                             <div className='flex gap-3 px-3 py-5 border rounded-xl shadow items-center'>
                                 <div className='p-2 bg-purple-100 rounded-full'>
-                                    <Icon path={mdiAccountCircle} size={1} />
+                                    <Icon path={mdiSitemap} size={1} />
                                 </div>
-                                <p>Step Sent</p>
+                                <p>ขั้นตอนการส่ง</p>
                             </div>
                             <div className='flex gap-3 px-3 py-5 border rounded-xl shadow items-center'>
                                 <div className='p-2 bg-purple-100 rounded-full'>
-                                    <Icon path={mdiAccountCircle} size={1} />
+                                    <Icon path={mdiCog} size={1} />
                                 </div>
-                                <p>Custom Sent</p>
+                                <p>ตั้งค่าการส่ง</p>
                             </div>
                         </div>
                         <div className='mt-10'>
                             <div>
                                 <input id="upload" type="file" hidden multiple onChange={handleFileChange} />
                                 <label htmlFor="upload" className='cursor-pointer'>
-                                    <p className='text-gray-500 font-medium'>Upload your files here</p>
+                                    <p className='font-medium'>แนบไฟล์ <span className='text-red-500'> *</span></p>
                                     <div className={`mt-2 p-5 w-full h-full bg-gray-100 ${files.length > 0 ? "" : "flex flex-col"} justify-center items-center rounded-xl shadow border-4 border-dotted`}>
                                         {uploadProgress > 0 ? (
                                             <div className='flex flex-col items-center opacity-50 gap-2'>
@@ -307,7 +295,7 @@ function FormSent({ setLoader }: FormSentProps) {
                                                 ))
                                             ) : (
                                                 <>
-                                                    <Icon path={mdiAccountCircle} size={1} className='text-gray-400' />
+                                                    <Icon path={mdiUploadCircle} size={1} className='text-gray-400' />
                                                     <h1 className='font-medium'>Click to upload</h1>
                                                     <p className='text-gray-400 text-sm'>Drag and drop files here</p>
                                                 </>
@@ -323,7 +311,7 @@ function FormSent({ setLoader }: FormSentProps) {
                         <p className='text-sm text-gray-400'>Please select Sent Type to Create Sent Document Form</p>
                         <div className='mt-6 flex flex-col gap-5'>
                             <div className=''>
-                                <label>Email</label>
+                                <label>อีเมล <span className='text-red-500'> *</span></label>
                                 <div className='mt-2 flex items-center rounded-xl border border-gray-300 p-2'>
                                     <div className='w-full'>
                                         <Select
@@ -346,24 +334,24 @@ function FormSent({ setLoader }: FormSentProps) {
                                             }}
                                         />
                                     </div>
-                                    <Icon path={mdiAccountCircle} size={1.5} className='text-gray-400 ml-2' />
+                                    <Icon path={mdiEmail} size={1.5} className='text-gray-400 ml-2' />
                                 </div>
                             </div>
                             <div className='grid grid-cols-2 gap-5'>
                                 <div className=''>
-                                    <label>หัวข้อ</label>
+                                    <label>หัวข้อ <span className='text-red-500'> *</span></label>
                                     <div className='mt-2 flex items-center rounded-xl border border-gray-300 p-2'>
                                         <input
                                             type="text"
                                             className='w-full p-1 '
-                                            placeholder='Email address'
+                                            placeholder='ชื่อเรื่อง'
                                             onChange={(e) => setHeader(e.target.value)}
                                         />
-                                        <Icon path={mdiAccountCircle} size={1.5} className='text-gray-400 ml-2' />
+                                        <Icon path={mdiPen} size={1.5} className='text-gray-400 ml-2' />
                                     </div>
                                 </div>
                                 <div className=''>
-                                    <label>Tags</label>
+                                    <label>ประเภท <span className='text-red-500'> *</span></label>
                                     <div className='mt-2 flex items-center rounded-xl border border-gray-300 p-2'>
                                         <select
                                             className='w-full p-1 appearance-none bg-white cursor-pointer'
@@ -373,19 +361,19 @@ function FormSent({ setLoader }: FormSentProps) {
                                             <option value="การบ้าน">การบ้าน</option>
                                             <option value="เอกสารสำคัญ">เอกสารสำคัญ</option>
                                         </select>
-                                        <Icon path={mdiAccountCircle} size={1.5} className='text-gray-400 ml-2' />
+                                        <Icon path={mdiTag} size={1.5} className='text-gray-400 ml-2' />
                                     </div>
                                 </div>
                             </div>
 
                             <div className="">
                                 <label>
-                                    รายละเอียด
+                                    รายละเอียด <span className='text-red-500'> *</span>
                                 </label>
                                 <div className="mt-2 flex items-center rounded-xl border border-gray-300 p-2 ">
                                     <textarea
-                                        placeholder="Enter your details"
-                                        className="max-h-40 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow text-gray-700 w-full p-1 rounded-sm"
+                                        placeholder="ใส่รายละเอียด..."
+                                        className="min-h-24 max-h-40 focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow text-gray-700 w-full p-1 rounded-sm"
                                         onChange={(e) => setDetail(e.target.value)}
                                     />
                                 </div>

@@ -14,66 +14,83 @@ interface Sents {
     files: [{ fileName: string, fileType: string, fileURL: string }];
     email: string;
     header: string;
-    detail: string;
     status: string;
-    date: string;
-    from: [{ email: string, time: string, date: string }];
+    fromSent: [{
+        email: string,
+        time: string,
+        date: string,
+        files: [{ fileName: string, fileType: string, fileURL: string }],
+        detail: string;
+    }];
 }
 
 interface TimelineProps {
     timeLine: Sents | undefined;
 }
-
 function Timeline({ timeLine }: TimelineProps) {
+
+    console.log(timeLine);
+
+    console.log("fromSent length:", timeLine?.fromSent.length);
 
     return (
         <MuiTimeline position="alternate-reverse">
-            <TimelineItem className=''>
-                <TimelineOppositeContent variant='h6' color='grey'>
-                    {timeLine?.from[0]?.time}
-                </TimelineOppositeContent>
-                <TimelineSeparator>
-                    <TimelineDot color="success" className='w-10 h-10' />
-                    <TimelineConnector className='w h-14' />
-                </TimelineSeparator>
-                <TimelineContent >
-                    <Typography variant="h6" component="span">
-                        ส่ง
-                    </Typography>
-                    <Typography>{timeLine?.from[0]?.email}</Typography>
-                </TimelineContent>
-            </TimelineItem>
-            {timeLine?.from.map((e, index) => (
-                index === timeLine?.from.length - 1 ? (
-                    <TimelineItem className=''>
-                        <TimelineSeparator>
-                            <TimelineDot color="grey" className='w-10 h-10' />
-                            {/* <TimelineConnector className='w h-14' /> */}
-                        </TimelineSeparator>
-                        <TimelineContent >
-                            <Typography variant="h6" component="span">
-                                รอการตอบกลับ
-                            </Typography>
-                            <Typography>{timeLine?.email}</Typography>
-                        </TimelineContent>
-                    </TimelineItem >
-                ) : (
-                    <TimelineItem className=''>
-                        <TimelineOppositeContent variant='h6' color='grey'>
+            {timeLine?.fromSent.map((e, index) => (
+                <>
+                    <TimelineItem className='' key={index}>
+                        <TimelineOppositeContent color='grey'>
                             {e.time}
                         </TimelineOppositeContent>
                         <TimelineSeparator>
                             <TimelineDot color="success" className='w-10 h-10' />
-                            {/* <TimelineConnector className='w h-14' /> */}
+                            <TimelineConnector className='w h-14' />
                         </TimelineSeparator>
                         <TimelineContent >
-                            <Typography variant="h6" component="span">
-                                ส่งไปถึง
+                            <Typography  component="span">
+                                <p className='text-md'>{index === 0 ? "ส่ง" : "ส่งไปที่"}</p>
                             </Typography>
-                            <Typography>{e.email}</Typography>
+                            <Typography>
+                                <p className='text-xs text-gray-500'>
+                                    {e?.email}
+                                </p>
+                            </Typography>
                         </TimelineContent>
                     </TimelineItem >
-                )
+                    {index === timeLine?.fromSent?.length - 1 && (
+                        timeLine?.status === "complete" && index === timeLine?.fromSent.length - 1 ? (
+                            <TimelineItem className=''>
+                                <TimelineSeparator>
+                                    <TimelineDot color="success" className='w-10 h-10' />                                </TimelineSeparator>
+                                <TimelineContent >
+                                    <Typography component="span">
+                                        <p className='text-md '>ตอบกลับแล้ว</p>
+                                    </Typography>
+                                    <Typography>
+                                        <p className='text-xs text-gray-500'>
+                                            {timeLine?.email}
+                                        </p>
+                                    </Typography>
+                                </TimelineContent>
+                            </TimelineItem >
+                        ) : (
+                            <TimelineItem className=''>
+                                <TimelineSeparator>
+                                    <TimelineDot color="grey" className='w-10 h-10' />
+                                </TimelineSeparator>
+                                <TimelineContent >
+                                    <Typography variant="h6" component="span">
+                                        <p className='text-md '>รอการตอบกลับ</p>
+                                    </Typography>
+                                    <Typography>
+                                        <p className='text-xs text-gray-500'>
+                                            {timeLine?.email}
+                                        </p>
+                                    </Typography>
+                                </TimelineContent>
+                            </TimelineItem >
+                        )
+                    )}
+                </>
             ))
             }
         </MuiTimeline >

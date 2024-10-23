@@ -25,7 +25,7 @@ function Status() {
         <div className="p-5 flex">
             <Navbar status="status" />
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
-                <Navbar2 title="Status" />
+                <Navbar2 title="สถานะ" />
                 <div className='mt-10'>
                     <TableStatus email={`${session?.user?.email}`}/>
                 </div>

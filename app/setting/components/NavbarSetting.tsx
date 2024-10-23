@@ -10,35 +10,29 @@ function Navbar() {
         className={`px-4 py-3 cursor-pointer flex bg-sky-100 text-blue-500 rounded-lg font-bold`}
       >
         <p>
-          My Profile
+          โปรไฟล์
         </p>
       </div>
       <div
         className={`px-4 py-3 cursor-pointer flex text-gray-400 hover:text-blue-500 rounded-lg font-bold`}
       >
         <p>
-          Security
+          ความปลอดภัย
         </p>
       </div>
       <div
         className={`px-4 py-3 cursor-pointer flex text-gray-400 hover:text-blue-500 rounded-lg font-bold`}
       >
         <p>
-          Notification
+          การแจ้งเตือน
         </p>
       </div>
+     
       <div
         className={`px-4 py-3 cursor-pointer flex text-gray-400 hover:text-blue-500 rounded-lg font-bold`}
       >
         <p>
-          Security
-        </p>
-      </div>
-      <div
-        className={`px-4 py-3 cursor-pointer flex text-gray-400 hover:text-blue-500 rounded-lg font-bold`}
-      >
-        <p>
-          Delete Account
+          ลบบัญชี
         </p>
       </div>
     </div>

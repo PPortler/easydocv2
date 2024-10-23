@@ -15,7 +15,7 @@ function Schedule() {
         <div className="p-5 flex">
             <Navbar status="schedule"/>
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
-                <Navbar2 title="Schedule" />
+                <Navbar2 title="กำหนดการ" />
                 <div className='flex flex-col gap-5 items-center mt-10'>
                    
                 </div>

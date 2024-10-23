@@ -2,7 +2,7 @@
 
 import React from 'react'
 import Icon from '@mdi/react';
-import { mdiMailboxOutline,mdiCog, mdiImageMultiple, mdiNearMe, mdiInvoiceTextClockOutline, mdiListStatus, mdiMessageProcessingOutline } from '@mdi/js';
+import { mdiFolderFile,mdiMailboxOutline,mdiCog, mdiImageMultiple, mdiNearMe, mdiInvoiceTextClockOutline, mdiListStatus, mdiMessageProcessingOutline } from '@mdi/js';
 import Link from 'next/link';
 
 function Navbar({ status }: { status: string }) {
@@ -14,36 +14,36 @@ function Navbar({ status }: { status: string }) {
                 </Link>
                 <div className='mt-10'>
                     <Link href="myfile" className={`${status === "myfile" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
-                        <Icon path={mdiImageMultiple} size={1} />
-                        <p>My File</p>
+                        <Icon path={mdiFolderFile} size={1} />
+                        <p>เอกสารของฉัน</p>
                     </Link>
                     <Link href="mailbox" className={`${status === "mailbox" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiMailboxOutline} size={1} />
-                        <p>MailBox</p>
+                        <p>กล่องข้อความ</p>
                     </Link>
                     <Link href="sent" className={`${status === "sent" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiNearMe} size={1} />
-                        <p>Sent</p>
+                        <p>ส่งเอกสาร</p>
                     </Link>
                     <Link href="schedule" className={`${status === "schedule" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiInvoiceTextClockOutline} size={1} />
-                        <p>Schedule</p>
+                        <p>กำหนดการ</p>
                     </Link>
                     <Link href="status" className={`${status === "status" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiListStatus} size={1} />
-                        <p>Status</p>
+                        <p>สถานะ</p>
                     </Link>
                 
                     <Link href="message" className={`${status === "message" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiMessageProcessingOutline} size={1} />
-                        <p>Message</p>
+                        <p>ข้อความ</p>
                     </Link>
                 </div>
             </div>
             <div>
                 <Link href="/setting" className={`${status === "setting" ? "bg-[#5852a5] border-s-4 border-white":""} border-s-4 border-[#5955B3] hover:border-white flex cursor-pointer gap-3 py-3 px-4 hover:bg-[#5852a5]`}>
                     <Icon path={mdiCog} size={1} />
-                    <p>Setting</p>
+                    <p>ตั้งค่า</p>
                 </Link>
             </div>
         </div>

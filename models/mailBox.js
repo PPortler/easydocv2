@@ -3,20 +3,24 @@ import mongoose from 'mongoose';
 const mailBoxSchema = new mongoose.Schema({
     idSent: { type: String, required: true },
     email: { type: String },
-    files: [
-        {
-            fileName: { type: String, required: true },
-            fileURL: { type: String, required: true },
-            fileType: { type: String, required: true },
-        }
-    ],
     header: { type: String },
     type: { type: String },
-    detail: { type: String },
-    date: { type: String },
-    time: { type: String },
+    fromSent: [
+        {
+            email: {type: String, require: true},
+            time: {type: String, require: true},
+            date: {type: String, require: true},
+            files: [
+                {
+                    fileName: { type: String, required: true },
+                    fileURL: { type: String, required: true },
+                    fileType: { type: String, required: true },
+                }
+            ],
+            detail: { type: String },
+        }
+    ],
     status: { type: Boolean },
-    from: { type: String },
 },
     {
         timestamps: true

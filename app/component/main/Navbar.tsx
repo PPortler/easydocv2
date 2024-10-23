@@ -9,27 +9,24 @@ function Navbar() {
             <h1 className="font-extrabold text-xl">Easy Doc</h1>
             <ul className="flex gap-5">
                 <li>
-                    <Link href="#">Home</Link>
+                    <Link href="#">หน้าหลัก</Link>
                 </li>
                 <li>
-                    <Link href="#">Home</Link>
+                    <Link href="#">บริการของเรา</Link>
                 </li>
                 <li>
-                    <Link href="#">Home</Link>
+                    <Link href="#">เกี่ยวกับเรา</Link>
                 </li>
                 <li>
-                    <Link href="#">Home</Link>
+                    <Link href="#">ติดต่อเรา</Link>
                 </li>
                 <li>
-                    <Link href="#">Home</Link>
-                </li>
-                <li>
-                    <Link href="#">Home</Link>
+                    <Link href="#">คำถามที่พบบ่อย</Link>
                 </li>
             </ul>
             <div className="gap-5 flex items-center">
-                <Link href="/login" className="">Login</Link>
-                <Link href="/register" className="bg-[#5955B3] text-white py-2 px-4 rounded-lg">Sign up</Link>
+                <Link href="/login" className="">เข้าสู่ระบบ</Link>
+                <Link href="/register" className="bg-[#5955B3] text-white py-2 px-4 rounded-lg">สมัครสมาชิก</Link>
             </div>
         </nav>
     )

@@ -35,9 +35,9 @@ function Navbar2({ title }: { title: String }) {
                 >
                     <Icon path={mdiAccountCircle} size={1} />
                     {isUser && (
-                        <div className='shadow absolute right-0 mt-1 rounded-xl overflow-hidden bg-white z-10 p-1'>
-                            <button className='py-1 px-4 hover:bg-[#5955B3] hover:text-white w-full rounded-xl'>Profile</button>
-                            <button onClick={() => signOut()} className='py-1 px-4 hover:bg-red-500 hover:text-white w-full text-red-500 rounded-xl'>Logout</button>
+                        <div className=' shadow absolute right-0 mt-1 rounded-xl overflow-hidden bg-white z-10 p-1'>
+                            <button className='py-1 px-4 hover:bg-[#5955B3] hover:text-white w-full rounded-xl'>โปรไฟล์</button>
+                            <button onClick={() => signOut()} className='py-1 px-4 hover:bg-red-500 hover:text-white w-full text-red-500 rounded-xl whitespace-nowrap'>ออกจากระบบ</button>
                         </div>
                     )}
                 </div>

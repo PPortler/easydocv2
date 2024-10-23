@@ -72,7 +72,7 @@ function Container({ idUser }: { idUser: string }) {
                                 >
                                 </div>
                                 <div className={`${isHoverProfile ? "" : "opacity-0"} transition-all duration-100 absolute top-0 w-20 h-20 rounded-full flex justify-center items-center text-white`}>
-                                    <p>Edit</p>
+                                    <p>แก้ไข</p>
                                 </div>
 
                             </div>
@@ -85,15 +85,15 @@ function Container({ idUser }: { idUser: string }) {
                         </div>
                         <button className='font-medium border rounded-lg flex items-center text-gray-400 py-1 px-3 gap-2 self-start'>
                             <Icon path={mdiPencilOutline} size={.8} />
-                            <p>Edit</p>
+                            <p>แก้ไข</p>
                         </button>
                     </div>
                     <div className='text-gray-400 border p-5 rounded-xl flex justify-between'>
                         <div className=''>
-                            <h1 className='font-bold text-[#5955B3]'>Personal infomation</h1>
+                            <h1 className='font-bold text-[#5955B3]'>ข้อมูลส่วนบุคคล</h1>
                             <div className='mt-5 grid grid-cols-2 gap-x-20 gap-y-5'>
                                 <div className='flex flex-col gap-1'>
-                                    <label className='font-medium'>First Name</label>
+                                    <label className='font-medium'>ชื่อ:</label>
                                     <input
                                         className='font-bold'
                                         type="text"
@@ -101,21 +101,21 @@ function Container({ idUser }: { idUser: string }) {
                                     />
                                 </div>
                                 <div className='flex flex-col gap-1'>
-                                    <label className='font-medium'>Last Name</label>
+                                    <label className='font-medium'>นามสกุล:</label>
                                     <input
                                         className='font-bold'
                                         type="text"
                                         value={`${dataUser.lastName}`}
                                     />                                </div>
                                 <div className='flex flex-col gap-1'>
-                                    <label className='font-medium'>Email address</label>
+                                    <label className='font-medium'>อีเมล:</label>
                                     <input
                                         className='font-bold'
                                         type="text"
                                         value={`${dataUser.email}`}
                                     />                                </div>
                                 <div className='flex flex-col gap-1'>
-                                    <label className='font-medium'>Phone</label>
+                                    <label className='font-medium'>เบอร์โทรศัพท์:</label>
                                     <input
                                         className='font-bold'
                                         type="text"

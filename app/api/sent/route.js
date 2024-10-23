@@ -5,7 +5,7 @@ import Sents from "@/models/sent"; // ตรวจสอบให้แน่ใ
 export async function POST(req) {
     try {
         // ดึงข้อมูลจากคำขอ
-        const { email, files, header, type, detail, status, fromEmail } = await req.json();
+        const { email, header, type, status, fromSent } = await req.json();
 
         // เชื่อมต่อกับฐานข้อมูล
         await connectDB();
@@ -13,12 +13,10 @@ export async function POST(req) {
         // สร้างเอกสารใหม่ใน Sents
         const newSent = new Sents({
             email,
-            files,
             header,
             type,
-            detail,
             status,
-            from: fromEmail,
+            fromSent: fromSent,
         });
 
         // บันทึกเอกสารและรับ id ที่สร้างขึ้น
@@ -29,7 +27,7 @@ export async function POST(req) {
             message: "อีเมลถูกบันทึกสำเร็จ", 
             id: savedSent._id // ส่ง id ที่สร้างขึ้นกลับไป
         }, { status: 201 });
-        
+
     } catch (err) {
         console.error("Error saving email:", err);
         return NextResponse.json({ error: "เกิดข้อผิดพลาด" }, { status: 500 });
