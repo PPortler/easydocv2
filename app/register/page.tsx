@@ -18,6 +18,7 @@ function Register() {
     const [phoneNumber, setPhoneNumber] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
+    const [error, setError] = useState<string>('');
 
     const [loader, setLoader] = useState<boolean>(false);
 
@@ -44,6 +45,12 @@ function Register() {
             password,
         };
 
+        if (password !== confirmPassword) {
+            setError("รหัสผ่านไม่ตรงกัน");
+            setLoader(false)
+            return;
+        }
+
         try {
             const res = await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/users`, bodyForm);
 
@@ -62,6 +69,7 @@ function Register() {
                     title: 'ข้อผิดพลาด',
                     text: res.data?.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง.',
                 })
+                return;
             }
         } catch (err) {
             console.error("มีข้อผิดพลาดเกิดขึ้น:", err);
@@ -71,6 +79,7 @@ function Register() {
                 title: 'ข้อผิดพลาด',
                 text: 'เกิดข้อผิดพลาด กรุณาลองใหม่อีกครั้ง.',
             })
+            return;
         }
     }
 
@@ -164,6 +173,11 @@ function Register() {
                                 <p className=''>ฉันเห็นด้วยทุกประการ <span className='text-red-400'>เงื่อนไข</span> และ <span className='text-red-400'>นโยบายความเป็นส่วนตัว</span> </p>
                             </div>
                         </div>
+                        {error && (
+                            <div className='mt-5 text-red-500 text-sm'>
+                                *{error}
+                            </div>
+                        )}
                         <div className='mt-5'>
                             <button type='submit' className='bg-[#5955B3] text-white rounded-lg w-full p-2'>สมัครสมาชิก</button>
                         </div>
