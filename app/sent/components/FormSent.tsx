@@ -307,8 +307,8 @@ function FormSent({ setLoader }: FormSentProps) {
                         </div>
                     </div>
                     <div className='mt-10 lg:mt-0'>
-                        <h1 className='font-medium'>Contact details</h1>
-                        <p className='text-sm text-gray-400'>Please select Sent Type to Create Sent Document Form</p>
+                        <h1 className='font-medium'>ข้อมูลการติดต่อ</h1>
+                        <p className='text-sm text-gray-400'>โปรดเลือกประเภทการส่งเพื่อสร้างแบบฟอร์มเอกสารที่ส่ง</p>
                         <div className='mt-6 flex flex-col gap-5'>
                             <div className=''>
                                 <label>อีเมล <span className='text-red-500'> *</span></label>
@@ -360,6 +360,8 @@ function FormSent({ setLoader }: FormSentProps) {
                                             <option value="0">-</option>
                                             <option value="การบ้าน">การบ้าน</option>
                                             <option value="เอกสารสำคัญ">เอกสารสำคัญ</option>
+                                            <option value="เอกสารสำคัญ">เอกสารทั่่วไป</option>
+                                            <option value="เอกสารสำคัญ">เอกสารทางการ</option>
                                         </select>
                                         <Icon path={mdiTag} size={1.5} className='text-gray-400 ml-2' />
                                     </div>
