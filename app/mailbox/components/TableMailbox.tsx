@@ -131,7 +131,7 @@ function TableMailbox({ email }: { email: string }) {
                     <div onClick={() => setOnDetail(undefined)} className='flex gap-3 cursor-pointer'>
                         <Icon path={mdiArrowLeftCircle} size={1} />
                         <p className='text-gray-500'>
-                            ข้อความจาก: {onDetail.fromSent[0]?.email}
+                            ข้อความจาก: {onDetail.fromSent[onDetail?.fromSent?.length-1]?.email}
                         </p>
                     </div>
                     <Reply data={onDetail} emailSession={email} />
