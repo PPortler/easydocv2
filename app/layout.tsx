@@ -4,7 +4,6 @@ import "./globals.css";
 import { AuthProvider } from "./Provider";
 import '@fontsource-variable/noto-sans-thai';
 
-
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -29,9 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <title>
-          Easy Doc
-        </title>
+        <title>Easy Doc</title>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
