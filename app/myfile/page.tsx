@@ -11,6 +11,7 @@ import { mdiFileAccount, mdiDotsVertical, mdiArrowDown } from '@mdi/js';
 import AddFile from '../component/myfile/AddFile';
 import axios from 'axios';
 import Loader from '../component/Loader';
+import Head from "next/head";
 
 interface File {
     fileName: string;
@@ -34,6 +35,12 @@ function MyFile() {
             setLoader(false);
         }
 
+        if(session?.user?.role === "admin"){
+            router.replace('/admin')
+            console.log("s")
+            setLoader(false);
+        }
+
         if (session?.user?.idUser) {
             getFiles(session?.user?.idUser);
             setLoader(false);
@@ -53,9 +60,9 @@ function MyFile() {
 
     return (
         <>
-            <head>
+            <Head>
                 <title>MyFile</title>
-            </head>
+            </Head>
             <div className="p-5 flex">
                 <Navbar status="myfile" />
                 <div className="bg-white rounded-3xl p-10 min-h-screen w-full">

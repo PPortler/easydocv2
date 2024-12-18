@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation'
 import Loader from '../component/Loader'
 import LoginWith from '../component/LoginWith'
+import Head from "next/head";
 
 function Register() {
 

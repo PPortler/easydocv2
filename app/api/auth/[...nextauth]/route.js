@@ -42,19 +42,31 @@ const authOption = {
     ],
     session: {
         strategy: "jwt",
+        maxAge: 30 * 24 * 60 * 60, // อายุของเซสชัน 30 วัน
+        updateAge: 24 * 60 * 60,   // อัปเดตทุก 24 ชั่วโมง
     },
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
                 token.id = user._id.toString(); 
+                token.role = user.role; 
             }
             return token;
         },
         async session({ session, token }) {
             if (token) {
                 session.user.idUser = token.id; 
+                session.user.role = token.role
             }
             return session;
+        },
+        async redirect({ url, baseUrl }) {
+            // ป้องกัน redirect loop ด้วยการควบคุม URL
+            if (url.startsWith(baseUrl)) {
+                return url;
+            } else {
+                return baseUrl;
+            }
         },
     },
     secret: process.env.NEXTAUTH_SECRET,
