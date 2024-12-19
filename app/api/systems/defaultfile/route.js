@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/database";
-import Systems from "@/models/systems";
 import DefaultFiles from "@/models/defaultFile";
 
 export async function POST(req) {

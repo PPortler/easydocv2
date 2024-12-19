@@ -24,6 +24,7 @@ const AddFile = ({ setLoader }: { setLoader: React.Dispatch<React.SetStateAction
             },
             showCancelButton: true,
             confirmButtonText: "ยืนยัน",
+            cancelButtonText: "ยกเลิก",
             showLoaderOnConfirm: true,
             preConfirm: (inputFileName) => {
                 if (!inputFileName) {
@@ -41,7 +42,7 @@ const AddFile = ({ setLoader }: { setLoader: React.Dispatch<React.SetStateAction
                 }
             }
         });
-        
+
     };
 
     // ฟังก์ชันจัดการไฟล์อัปโหลด
@@ -78,13 +79,29 @@ const AddFile = ({ setLoader }: { setLoader: React.Dispatch<React.SetStateAction
                             });
 
                             if (res.status === 200 || res.status === 201) {
+                                let timerInterval: NodeJS.Timeout | undefined;
                                 Swal.fire({
-                                    icon: 'success',
-                                    title: 'สำเร็จ',
-                                    text: `อัพโหลดไฟล์ ${fileName} สำเร็จ`,
-                                }).then(() => {
-                                    setLoader(false);
-                                    window.location.reload();
+                                    title: "กำลังเพิ่มไฟล์",
+                                    html: "<b></b> milliseconds.",
+                                    timer: 2000,
+                                    timerProgressBar: true,
+                                    didOpen: () => {
+                                        Swal.showLoading();
+                                        const timer = Swal.getPopup()?.querySelector("b");
+                                        if (timer) { 
+                                            timerInterval = setInterval(() => {
+                                                timer.textContent = `${Swal.getTimerLeft()}`; 
+                                            }, 100);
+                                        }
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                    }
+                                }).then((result) => {
+                                    if (result.dismiss === Swal.DismissReason.timer) {
+                                        console.log("I was closed by the timer");
+                                        window.location.reload();
+                                    }
                                 });
                             } else {
                                 Swal.fire({

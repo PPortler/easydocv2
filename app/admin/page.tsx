@@ -12,6 +12,7 @@ import AddFile from './componants/AddFile';
 import axios from 'axios';
 import Loader from '../component/Loader';
 import Head from "next/head";
+import Swal from 'sweetalert2'
 
 interface File {
     _id: string;
@@ -59,8 +60,109 @@ function MyFile() {
         }
     }
 
-    async function handleChangeName(id: string) {
-        console.log(id)
+    async function handleChangeName(id: string, name: string) {
+        Swal.fire({
+            title: "โปรดระบุชื่อไฟล์",
+            input: "text",
+            inputValue: name,
+            inputAttributes: {
+                autocapitalize: "off"
+            },
+            showCancelButton: true,
+            confirmButtonText: "ยืนยัน",
+            cancelButtonText: "ยกเลิก",
+            showLoaderOnConfirm: true,
+            preConfirm: (inputFileName) => {
+                if (!inputFileName) {
+                    Swal.showValidationMessage('กรุณาระบุชื่อไฟล์');
+                    return false;
+                }
+                return inputFileName;
+            }
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const res = await axios.put(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/systems/defaultfile/${id}`
+                        , { fileName: result.value }
+                    );
+                    if (res.status === 200 || res.status === 201) {
+                        let timerInterval: NodeJS.Timeout | undefined;
+                        Swal.fire({
+                            title: "กำลังแก้ไขชื่อไฟล์",
+                            html: "<b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup()?.querySelector("b");
+                                if (timer) {
+                                    timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                }
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                                window.location.reload();
+                            }
+                        });
+                    }
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        });
+    }
+
+    //deleteFile
+    function handleDeleteFile(id: string, name: string, type: string) {
+        Swal.fire({
+            title: `ลบไฟล์`,
+            text: `คุณต้องการลบ ${name}.${type} ?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "ยืนยัน",
+            cancelButtonText: "ยกเลิก",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const res = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/systems/defaultfile/${id}`);
+                    
+                    if (res.status === 200) {
+                        let timerInterval: NodeJS.Timeout | undefined;
+                        Swal.fire({
+                            title: "กำลังลบไฟล์",
+                            html: "<b></b> milliseconds.",
+                            timer: 2000,
+                            timerProgressBar: true,
+                            didOpen: () => {
+                                Swal.showLoading();
+                                const timer = Swal.getPopup()?.querySelector("b");
+                                if (timer) {
+                                    timerInterval = setInterval(() => {
+                                        timer.textContent = `${Swal.getTimerLeft()}`;
+                                    }, 100);
+                                }
+                            },
+                            willClose: () => {
+                                clearInterval(timerInterval);
+                            }
+                        }).then((result) => {
+                            if (result.dismiss === Swal.DismissReason.timer) {
+                                console.log("I was closed by the timer");
+                                window.location.reload();
+                            }
+                        });
+                    }
+                } catch (err) {
+                    console.log(err)
+                }
+            }
+        });
     }
 
     return (
@@ -95,21 +197,27 @@ function MyFile() {
                             <AddFile setLoader={setLoader} />
                         </div>
                         <div className='my-5 flex flex-col  gap-3'>
-                            {files?.map((file, index) => (
-                                <div key={index} className='justify-between items-center flex border rounded-xl p-4 bg-gray-100'>
-                                    <div className='flex gap-3 text-ellipsis overflow-hidden whitespace-nowrap'>
-                                        <Icon path={mdiFileAccount} size={1} className='flex-shrink-0' />
-                                        <p className=' text-ellipsis overflow-hidden whitespace-nowrap'>{file?.fileName}</p>
-                                    </div>
-                                    <div className='flex gap-2'>
-                                        <div onClick={() => handleChangeName(file._id)} className='cursor-pointer'>
-                                            <Icon path={mdiPencil} size={.9}  />
+                            {files.length === 0 ? (
+                                <div>กำลังโหลด...</div>
+                            ) : (
+                                files?.map((file, index) => (
+                                    <div key={index} className='justify-between items-center flex border rounded-xl p-4 bg-gray-100'>
+                                        <div className='flex gap-3 text-ellipsis overflow-hidden whitespace-nowrap'>
+                                            <Icon path={mdiFileAccount} size={1} className='flex-shrink-0' />
+                                            <p className=' text-ellipsis overflow-hidden whitespace-nowrap'>{file?.fileName}.{file?.fileType}</p>
                                         </div>
+                                        <div className='flex gap-2'>
+                                            <div onClick={() => handleChangeName(file._id, file.fileName)} className='cursor-pointer'>
+                                                <Icon path={mdiPencil} size={.9} />
+                                            </div>
 
-                                        <Icon path={mdiDelete} size={.9} className='cursor-pointer' />
+                                            <div onClick={() => handleDeleteFile(file._id, file.fileName, file.fileType)} className='cursor-pointer'>
+                                                <Icon path={mdiDelete} size={.9} />
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>
