@@ -9,15 +9,15 @@ function NavbarAdmin({ status }: { status: string }) {
     return (
         <div className='text-white p-5 pt-8 w-80 flex flex-col justify-between'>
             <div>
-                <Link href="/myfile" className='text-5xl text-center font-medium'>
+                <Link href="/admin" className='text-5xl text-center font-medium'>
                     Easy Doc
                 </Link>
                 <div className='mt-10'>
-                    <Link href="myfile" className={`${status === "myfile" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
+                    <Link href="/admin" className={`${status === "myfile" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiFolderFile} size={1} />
                         <p>ไฟล์เริ่มต้น</p>
                     </Link>
-                    <Link href="mailbox" className={`${status === "mailbox" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
+                    <Link href="/admin/manageUser" className={`${status === "manageUser" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiMailboxOutline} size={1} />
                         <p>จัดการผู้ใช้</p>
                     </Link>
