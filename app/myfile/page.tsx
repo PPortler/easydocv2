@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -10,8 +11,10 @@ import axios from "axios";
 import Loader from "../component/Loader";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import AddFile from "../component/myfile/AddFile";
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
 import { jsPDF } from "jspdf";
+import Head from "next/head";
 
 interface File {
   fileName: string;
@@ -23,7 +26,7 @@ function MyFile() {
   const { status, data: session } = useSession();
   const router = useRouter();
 
-  const [loader, setLoader] = useState<boolean>(true);
+  const [loader, setLoader] = useState<boolean>(false);
   const [files, setFiles] = useState<File[]>([]);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [updatedPdf, setUpdatedPdf] = useState<string | null>(null);
@@ -50,6 +53,11 @@ function MyFile() {
     }
     if (!session) {
       router.replace("/login");
+      setLoader(false);
+    }
+
+    if (session?.user?.role === "admin") {
+      router.replace('/admin')
       setLoader(false);
     }
 
@@ -135,17 +143,17 @@ function MyFile() {
   const savePdf = async () => {
     try {
       const { PDFDocument, rgb } = await import("pdf-lib");
-  
+
       // โหลดไฟล์ PDF ต้นฉบับ
       const existingPdfBytes = await fetch(selectedFile!).then((res) =>
         res.arrayBuffer()
       );
-  
+
       // โหลด PDF และสร้างเอกสารใหม่
       const pdfDoc = await PDFDocument.load(existingPdfBytes);
       const pages = pdfDoc.getPages();
       const firstPage = pages[0]; // เพิ่มข้อความในหน้าที่หนึ่ง
-  
+
       // เพิ่มข้อความลงใน PDF
       textElements.forEach((element) => {
         const y = firstPage.getHeight() - element.y; // คำนวณแกน Y
@@ -162,10 +170,10 @@ function MyFile() {
           );
         }
       });
-  
+
       // บันทึกไฟล์ PDF ใหม่
       const pdfBytes = await pdfDoc.save();
-  
+
       // ดาวน์โหลด PDF ใหม่
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const link = document.createElement("a");
@@ -176,14 +184,14 @@ function MyFile() {
       console.error("Error saving PDF:", error);
     }
   };
-  
-  
+
+
 
   // ฟังก์ชันโหลดไฟล์
-const loadFile = async () => {
+  const loadFile = async () => {
     try {
       const { PDFDocument } = await import("pdf-lib");
-  
+
       // สร้าง PDF เปล่าหรือโหลดไฟล์ต้นฉบับ
       const pdfDoc = await PDFDocument.create();
       const page = pdfDoc.addPage([600, 800]);
@@ -192,7 +200,7 @@ const loadFile = async () => {
         y: 750,
         size: 12,
       });
-  
+
       // ดาวน์โหลดไฟล์
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
@@ -207,9 +215,9 @@ const loadFile = async () => {
 
   return (
     <>
-      <head>
+      <Head>
         <title>MyFile</title>
-      </head>
+      </Head>
       <div className="p-5 flex">
         <Navbar status="myfile" />
         <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
@@ -217,6 +225,7 @@ const loadFile = async () => {
 
           <div className="mt-10 border p-10 rounded-3xl">
             <p className="text-xl font-medium">ไฟล์เริ่มต้น</p>
+           
             <div className="my-5 grid grid-cols-4 gap-5">
               {loader ? (
                 <Loader />
@@ -329,10 +338,12 @@ const loadFile = async () => {
                     </button>
                   </div>
                 </div>
+
               </div>
             </div>
           )}
         </div>
+          <AddFile email={session?.user?.email || ""} id={session?.user?.idUser || ""} />
       </div>
     </>
   );
