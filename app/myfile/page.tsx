@@ -225,7 +225,7 @@ function MyFile() {
 
           <div className="mt-10 border p-10 rounded-3xl">
             <p className="text-xl font-medium">ไฟล์เริ่มต้น</p>
-           
+           <hr className="border my-5"/>
             <div className="my-5 grid grid-cols-4 gap-5">
               {loader ? (
                 <Loader />

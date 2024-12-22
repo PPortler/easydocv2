@@ -21,10 +21,11 @@ const authOption = {
                 try {
                     await connectDB();
                     const user = await Users.findOne({ email });
-
+   
                     if (!user) {
                         return null;
                     }
+                  
 
                     const passwordMatch = await bcrypt.compare(password, user.password);
 
