@@ -21,15 +21,15 @@ function NavbarAdmin({ status }: { status: string }) {
                         <Icon path={mdiMailboxOutline} size={1} />
                         <p>จัดการผู้ใช้</p>
                     </Link>
-                    <Link href="sent" className={`${status === "sent" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
+                    <Link href="" className={`${status === "sent" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiNearMe} size={1} />
                         <p>จัดการเอกสาร</p>
                     </Link>
-                    <Link href="schedule" className={`${status === "schedule" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
+                    <Link href="" className={`${status === "schedule" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiInvoiceTextClockOutline} size={1} />
                         <p>สถานะ</p>
                     </Link>
-                    <Link href="status" className={`${status === "status" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
+                    <Link href="" className={`${status === "status" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
                         <Icon path={mdiListStatus} size={1} />
                         <p>ขั้นตอนการทำงาน</p>
                     </Link>
@@ -37,7 +37,7 @@ function NavbarAdmin({ status }: { status: string }) {
                 </div>
             </div>
             <div>
-                <Link href="/setting" className={`${status === "setting" ? "bg-[#5852a5] border-s-4 border-white":""} border-s-4 border-[#5955B3] hover:border-white flex cursor-pointer gap-3 py-3 px-4 hover:bg-[#5852a5]`}>
+                <Link href="" className={`${status === "setting" ? "bg-[#5852a5] border-s-4 border-white":""} border-s-4 border-[#5955B3] hover:border-white flex cursor-pointer gap-3 py-3 px-4 hover:bg-[#5852a5]`}>
                     <Icon path={mdiCog} size={1} />
                     <p>ตั้งค่า</p>
                 </Link>

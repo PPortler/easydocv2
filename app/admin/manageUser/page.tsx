@@ -13,13 +13,14 @@ import axios from 'axios';
 import Loader from '@/app/component/Loader'
 import Head from "next/head";
 import TablePage from './component/Table';
+import { User} from '@/app/types/useTypes'
 
 function MyFile() {
 
     const { status, data: session } = useSession();
     const router = useRouter();
 
-    const [loader, setLoader] = useState<boolean>(true);
+    const [loader, setLoader] = useState<boolean>(false);
 
     useEffect(() => {
         if (status === 'loading') {
@@ -37,8 +38,20 @@ function MyFile() {
 
         if (session?.user?.idUser) {
             setLoader(false);
+            getUsers();
         }
     }, [session])
+
+    //get users
+    const [users, setUsers] = useState<User[]>([])
+    async function getUsers() {
+        try {
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/users`);
+            setUsers(res.data.users || [])
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <>
@@ -50,7 +63,7 @@ function MyFile() {
                 <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
                     <Navbar2 title="จัดการผู้ใช้" />
                     <div className='my-5'>
-                        <TablePage />
+                        <TablePage dataUser = {users} id = {session?.user?.idUser}/>
                     </div>
                 </div>
                 {loader && (

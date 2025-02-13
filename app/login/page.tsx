@@ -3,23 +3,42 @@
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import Swal from 'sweetalert2'
 import Loader from '../component/Loader'
 import LoginWith from '../component/LoginWith'
+import { useSession } from 'next-auth/react'
 
 
 function Login() {
+
+    //session check
+    const { status, data: session } = useSession()
+    const router = useRouter();
+
+    useEffect(() => {
+        if (status === "loading") {
+            return;
+        }
+        if (!session) {
+            router.replace("/login");
+            setLoader(false);
+        }
+
+        if (session?.user?.role === "admin") {
+            router.replace('/admin')
+        } else if (session?.user?.role === "user") {
+            router.replace('/myfile')
+        }
+    }, [session, status]);
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<String>('')
 
     const [loader, setLoader] = useState<boolean>(false);
-
-    const router = useRouter();
 
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -69,7 +88,6 @@ function Login() {
                 icon: 'success',
                 confirmButtonText: 'ตกลง'
             })
-            router.replace('/myfile')
         } catch (err) {
             console.log(err);
         }
