@@ -29,7 +29,7 @@ function Login() {
 
         if (session?.user?.role === "admin") {
             router.replace('/admin')
-        } else if (session?.user?.role === "user") {
+        } else if (session?.user?.role?.toLocaleLowerCase() === "user") {
             router.replace('/myfile')
         }
     }, [session, status]);
