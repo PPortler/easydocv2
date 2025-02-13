@@ -18,7 +18,7 @@ import { User } from "@/app/types/useTypes";
 
 interface TablePageProps {
     dataUser: User[];
-    id: string;
+    id: string | undefined;
 }
 
 interface Column {

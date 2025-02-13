@@ -63,7 +63,7 @@ function MyFile() {
                 <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
                     <Navbar2 title="จัดการผู้ใช้" />
                     <div className='my-5'>
-                        <TablePage dataUser = {users} id = {session?.user?.idUser}/>
+                        <TablePage dataUser = {users} id = {session?.user?.idUser || ''}/>
                     </div>
                 </div>
                 {loader && (
