@@ -63,6 +63,7 @@ function MyFile() {
 
     if (session?.user?.idUser) {
       getFiles(session?.user?.idUser);
+      getDefaultFile();
     }
   }, [session, status]);
 
@@ -213,6 +214,17 @@ function MyFile() {
     }
   };
 
+  //get defaultFile
+  const [defaultFile, setDefaultFile] = useState<File[]>([])
+  async function getDefaultFile() {
+    try {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/systems/defaultfile`);
+      setDefaultFile(res.data.files || [])
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   return (
     <>
       <Head>
@@ -225,7 +237,23 @@ function MyFile() {
 
           <div className="mt-10 border p-10 rounded-3xl">
             <p className="text-xl font-medium">ไฟล์เริ่มต้น</p>
-           <hr className="border my-5"/>
+            {/* defaultFile for admin */}
+            <div className="grid grid-cols-4 gap-5 mt-5">
+            {defaultFile?.length > 0 && (
+              defaultFile?.map((file, index) => (
+                <div
+                  key={index}
+                  className="flex items-center justify-between border rounded-xl p-4 bg-gray-100 cursor-pointer"
+                >
+                  <div className="flex gap-3 overflow-hidden">
+                    <Icon path={mdiFileAccount} size={1} />
+                    <p className="text-ellipsis overflow-hidden whitespace-nowrap">{file.fileName}</p>
+                  </div>
+                </div>
+              ))
+            )}
+            </div>
+            <hr className="border my-5" />
             <div className="my-5 grid grid-cols-4 gap-5">
               {loader ? (
                 <Loader />
@@ -238,7 +266,7 @@ function MyFile() {
                   >
                     <div className="flex gap-3 overflow-hidden">
                       <Icon path={mdiFileAccount} size={1} />
-                      <p className="text-ellipsis">{file.fileName}</p>
+                      <p className="text-ellipsis overflow-hidden whitespace-nowrap">{file.fileName}</p>
                     </div>
                   </div>
                 ))
@@ -343,7 +371,7 @@ function MyFile() {
             </div>
           )}
         </div>
-          <AddFile email={session?.user?.email || ""} id={session?.user?.idUser || ""} />
+        <AddFile email={session?.user?.email || ""} id={session?.user?.idUser || ""} />
       </div>
     </>
   );
