@@ -31,6 +31,7 @@ interface TimelineProps {
 }
 function Timeline({ timeLine }: TimelineProps) {
 
+
     console.log(timeLine);
 
     console.log("fromSent length:", timeLine?.fromSent.length);
@@ -56,6 +57,11 @@ function Timeline({ timeLine }: TimelineProps) {
                             <Typography>
                                 <p className='text-xs text-gray-500'>
                                     {e?.email}
+                                </p>
+                            </Typography>
+                            <Typography>
+                                <p className='text-xs text-gray-500'>
+                                    ข้อความ: {e?.detail}
                                 </p>
                             </Typography>
                         </TimelineContent>

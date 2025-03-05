@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 function Navbar({ status }: { status: string }) {
     return (
-        <div className='text-white p-5 pt-8 w-80 flex flex-col justify-between'>
+        <div className='text-white p-5 pt-8 w-64 flex flex-col justify-between  flex-shrink-0'>
             <div>
                 <Link href="/myfile" className='text-5xl text-center font-medium'>
                     Easy Doc
