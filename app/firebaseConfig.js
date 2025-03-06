@@ -1,5 +1,6 @@
-import { initializeApp } from 'firebase/app';
-import { getStorage } from 'firebase/storage'
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getStorage } from 'firebase/storage';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
     apiKey: "AIzaSyALCayWzmpQk8lRiyW9odmz_BgY_YYBAG0",
@@ -12,8 +13,14 @@ const firebaseConfig = {
 };
 
 
-const app = initializeApp(firebaseConfig);
+// ป้องกันการ initialize ซ้ำซ้อนในกรณีที่มีการเรียกหลายครั้ง
+const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+
+// สร้าง instance ของ Firestore
+const db = getFirestore(app);
+
+// สร้าง instance ของ Storage
 const storage = getStorage(app);
 
-export { storage };
+export { db,storage };
 
