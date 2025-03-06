@@ -54,16 +54,22 @@ function Timeline({ timeLine }: TimelineProps) {
                             <Typography component="span">
                                 <p className='text-md'>{index === 0 ? "ส่ง" : "ส่งไปที่"}</p>
                             </Typography>
-                            <Typography>
-                                <p className='text-xs text-gray-500'>
-                                    {e?.email}
-                                </p>
-                            </Typography>
-                            <Typography>
-                                <p className='text-xs text-gray-500'>
-                                    ข้อความ: {e?.detail}
-                                </p>
-                            </Typography>
+                            <div className={`flex ${index % 2 === 0 ? "justify-end":"justify-start"}`}>
+                                <div className='bg-black py-2 px-4 rounded-lg w-fit flex flex-col gap-1'>
+                                    <Typography>
+                                        <p className='text-xs text-yellow-200'>
+                                            {e?.email}
+                                        </p>
+                                    </Typography>
+                                    <Typography>
+
+                                        <p className='text-xs  text-white'>
+                                            ข้อความ: {e?.detail}
+                                        </p>
+
+                                    </Typography>
+                                </div>
+                            </div>
                         </TimelineContent>
                     </TimelineItem >
                     {index === timeLine?.fromSent?.length - 1 && (
