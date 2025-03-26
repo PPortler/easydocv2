@@ -66,7 +66,7 @@ function Reply({ data, emailSession }: MailBoxProps) {
     }, [])
     //getEmail
     useEffect(() => {
-        const options: AllEmail[] = allUser.map(user => ({
+        const options: AllEmail[] = allUser?.map(user => ({
             value: user.email,
             label: user.email,
         }));

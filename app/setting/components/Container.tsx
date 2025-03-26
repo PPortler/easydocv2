@@ -61,11 +61,12 @@ function Container({ idUser }: { idUser: string }) {
                                 onMouseLeave={() => setIsHoverProfile(false)}
                             >
                                 <Image
-                                    src={`${dataUser.profile || "/image/profile.png"} `}
+                                    src={dataUser.profile ? dataUser.profile.trimEnd() : "/image/profile.png"}
                                     height={1000}
                                     width={1000}
-                                    priority alt="profil"
-                                    className='w-20 h-20'
+                                    priority
+                                    alt="profile"
+                                    className="w-20 h-20"
                                 />
                                 <div
                                     className={`${isHoverProfile ? " opacity-50" : "opacity-0 "} bg-black transition-all duration-100  absolute top-0 w-20 h-20 rounded-full flex justify-center items-center  `}
@@ -130,15 +131,15 @@ function Container({ idUser }: { idUser: string }) {
                     </div>
                 </div>
             ) : (
-            <div className='w-full h-full absolute top-0 left-0 flex justify-center items-center opacity-50'>
-                <PulseLoader
-                    size={10}
-                    aria-label="Loading Spinner"
-                    color={`#5955B3`}
-                    className='z-10' 
-                    speedMultiplier={1}
-                />
-            </div>
+                <div className='w-full h-full absolute top-0 left-0 flex justify-center items-center opacity-50'>
+                    <PulseLoader
+                        size={10}
+                        aria-label="Loading Spinner"
+                        color={`#5955B3`}
+                        className='z-10'
+                        speedMultiplier={1}
+                    />
+                </div>
             )}
         </div >
     )

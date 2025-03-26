@@ -32,25 +32,25 @@ export async function GET(req) {
     // เชื่อมต่อ DB
     await connectDB();
 
-    // อ่าน query string "search" จาก URL
-    const { searchParams } = new URL(req.url);
-    const search = searchParams.get("search") || "";
+    // // อ่าน query string "search" จาก URL
+    // const { searchParams } = new URL(req.url);
+    // const search = searchParams.get("search") || "";
 
-    // ถ้า search มีค่า => filter ด้วย firstName, lastName, email
-    // ถ้า search ว่าง => filter = {}
-    let filter = {};
-    if (search) {
-      filter = {
-        $or: [
-          { firstName: { $regex: search, $options: "i" } },
-          { lastName: { $regex: search, $options: "i" } },
-          { email: { $regex: search, $options: "i" } },
-        ],
-      };
-    }
+    // // ถ้า search มีค่า => filter ด้วย firstName, lastName, email
+    // // ถ้า search ว่าง => filter = {}
+    // let filter = {};
+    // if (search) {
+    //   filter = {
+    //     $or: [
+    //       { firstName: { $regex: search, $options: "i" } },
+    //       { lastName: { $regex: search, $options: "i" } },
+    //       { email: { $regex: search, $options: "i" } },
+    //     ],
+    //   };
+    // }
 
     // ค้นหาจาก MongoDB
-    const users = await Users.find(filter);
+    const users = await Users.find({});
 
     // สร้างผลลัพธ์ที่จะส่งกลับ (ไม่ส่ง password)
     const result = users.map((u) => ({

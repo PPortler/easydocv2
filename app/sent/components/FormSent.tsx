@@ -59,7 +59,7 @@ function FormSent({ setLoader }: FormSentProps) {
     const [allEmail, setAllEmail] = useState<AllEmail[]>([]);
 
     useEffect(() => {
-        const options: AllEmail[] = allUser.map(user => ({
+        const options: AllEmail[] = allUser?.map(user => ({
             value: user.email,
             label: user.email,
         }));
@@ -70,7 +70,7 @@ function FormSent({ setLoader }: FormSentProps) {
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/users`);
             if (res.status === 200) {
-                setAllUser(res.data.users);
+                setAllUser(res.data);
             }
         } catch (err) {
             console.log(err);
@@ -234,9 +234,10 @@ function FormSent({ setLoader }: FormSentProps) {
         }
     }
 
+    console.log(allUser)
     return (
         <div>
-            {allEmail.length > 0 ? (
+            {allEmail?.length > 0 ? (
                 <form onSubmit={handleSubmit} className='lg:grid-cols-2 mt-10 grid grid-cols-1 gap-x-14'>
                     <div>
                         <h1 className='font-medium'>ประเภทการส่ง</h1>

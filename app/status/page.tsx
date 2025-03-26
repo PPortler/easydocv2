@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 
 function Status() {
 
-    const [loader, setLoader] = useState<boolean>(false);
+    const [loader, setLoader] = useState<String>('wait');
 
     const { status, data: session } = useSession();
     const router = useRouter();
@@ -23,7 +23,7 @@ function Status() {
 
         if (!session) {
             router.replace('/login')
-            setLoader(false);
+            setLoader("pass");
         }
 
         if (!session?.user?.email){
@@ -37,11 +37,11 @@ function Status() {
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
                 <Navbar2 title="สถานะ" />
                 <div className='mt-10'>
-                    <TableStatus email={`${session?.user?.email}`}/>
+                <TableStatus email={session?.user?.email || ""} setLoader={setLoader} loader={loader} />
                 </div>
 
             </div>
-            {loader && (
+            {loader === 'wait' && (
                 <div>
                     <Loader />
                 </div>

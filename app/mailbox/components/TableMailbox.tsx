@@ -65,7 +65,7 @@ function createData(
     return { user, files, time, date, detail };
 }
 
-function TableMailbox({ email }: { email: string }) {
+function TableMailbox({ email, setLoader, loader }: { email: string, setLoader: React.Dispatch<React.SetStateAction<String>>, loader: string }) {
 
     //get all sent
     const [allMailbox, setAllMailbox] = useState<MailBox[]>([]);
@@ -77,14 +77,17 @@ function TableMailbox({ email }: { email: string }) {
     }, [email])
 
     async function getMailBox(email: string) {
-
+        setLoader("wait")
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/mailBox/${email}`);
 
             if (res.status === 200) {
                 setAllMailbox(res.data);
+                setLoader("pass")
+
             } else {
                 console.log('Error get dataUser');
+                setLoader("failed")
             }
         } catch (err) {
             console.log(err);
@@ -125,13 +128,19 @@ function TableMailbox({ email }: { email: string }) {
     const [onDetail, setOnDetail] = useState<MailBox | undefined>(undefined);
 
     return (
-        allMailbox.length > 0 ? (
+        loader === "failed" ? (
+            <div className='flex justify-center'>
+                <div className='bg-gray-200 py-2 px-4 rounded-xl text-black w-fit'>
+                    ไม่มีข้อความที่ถูกส่งมา!
+                </div>
+            </div>
+        ) : (
             onDetail ? (
                 <div>
                     <div onClick={() => setOnDetail(undefined)} className='flex gap-3 cursor-pointer'>
                         <Icon path={mdiArrowLeftCircle} size={1} />
                         <p className='text-gray-500'>
-                            ข้อความจาก: {onDetail.fromSent[onDetail?.fromSent?.length-1]?.email}
+                            ข้อความจาก: {onDetail.fromSent[onDetail?.fromSent?.length - 1]?.email}
                         </p>
                     </div>
                     <Reply data={onDetail} emailSession={email} />
@@ -267,12 +276,6 @@ function TableMailbox({ email }: { email: string }) {
 
                 </div>
             )
-        ) : (
-            <div className='flex justify-center'>
-                <div className='bg-gray-200 py-2 px-4 rounded-xl text-black w-fit'>
-                    ไม่มีข้อความที่ถูกส่งมา!
-                </div>
-            </div>
         )
     )
 

@@ -64,7 +64,7 @@ function createData(
 }
 
 
-function TableStatus({ email }: { email: string }) {
+function TableStatus({ email, setLoader, loader }: { email: string, setLoader: React.Dispatch<React.SetStateAction<String>>, loader: string }) {
 
     //get all sent
     const [allSent, setAllsent] = useState<Sents[]>([]);
@@ -76,14 +76,17 @@ function TableStatus({ email }: { email: string }) {
     }, [email])
 
     async function getSents(email: string) {
+        setLoader("wait")
 
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/sent/status/${email}`);
 
             if (res.status === 200) {
                 setAllsent(res.data);
+                setLoader("pass")
             } else {
                 console.log('Error get dataUser');
+                setLoader("failed")
             }
         } catch (err) {
             console.log(err);
@@ -163,7 +166,13 @@ function TableStatus({ email }: { email: string }) {
             </div>
         ) : (
             <div className=''>
-                {allSent.length > 0 ? (
+                {loader === "failed" ? (
+                    <div className='flex justify-center'>
+                        <div className='bg-gray-200 py-2 px-4 rounded-xl text-black w-fit'>
+                            ยังไม่มีไฟล์ที่ถูกส่ง!
+                        </div>
+                    </div>
+                ) : (
                     <div>
                         <div className='mb-3 flex gap-5 justify-end text-gray-600 text-xs'>
                             <div className='flex gap-2 items-center'>
@@ -180,7 +189,7 @@ function TableStatus({ email }: { email: string }) {
                                 <Table stickyHeader aria-label="sticky table">
                                     <TableHead>
                                         <TableRow>
-                                            {columns.map((column) => (
+                                            {columns?.map((column) => (
                                                 <TableCell
                                                     key={column.id}
                                                     align="center"
@@ -197,7 +206,7 @@ function TableStatus({ email }: { email: string }) {
                                             return (
 
                                                 <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
-                                                    {columns.map((column) => {
+                                                    {columns?.map((column) => {
                                                         const value = row[column.id as keyof Data];
 
                                                         // แสดงค่า user
@@ -300,12 +309,7 @@ function TableStatus({ email }: { email: string }) {
                             />
                         </Paper>
                     </div>
-                ) : (
-                    <div className='flex justify-center'>
-                        <div className='bg-gray-200 py-2 px-4 rounded-xl text-black w-fit'>
-                            ยังไม่มีไฟล์ที่ถูกส่ง!
-                        </div>
-                    </div>
+
                 )}
             </div>
         )

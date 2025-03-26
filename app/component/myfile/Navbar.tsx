@@ -33,11 +33,6 @@ function Navbar({ status }: { status: string }) {
                         <Icon path={mdiListStatus} size={1} />
                         <p>สถานะ</p>
                     </Link>
-                
-                    <Link href="message" className={`${status === "message" ? "bg-[#5852a5] border-s-4 border-white":""} hover:border-white hover:bg-[#5852a5] border-s-4 border-[#5955B3] flex cursor-pointer gap-3 py-3 px-4 `}>
-                        <Icon path={mdiMessageProcessingOutline} size={1} />
-                        <p>ข้อความ</p>
-                    </Link>
                 </div>
             </div>
             <div>

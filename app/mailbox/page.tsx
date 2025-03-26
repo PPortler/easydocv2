@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 
 function MailBox() {
 
-    const [loader, setLoader] = useState<boolean>(false);
+    const [loader, setLoader] = useState<string>("wait");
 
     const { status, data: session } = useSession();
     const router = useRouter();
@@ -23,7 +23,7 @@ function MailBox() {
 
         if (!session) {
             router.replace('/login')
-            setLoader(false);
+            setLoader("wait");
         }
 
         if (!session?.user?.email){
@@ -38,11 +38,11 @@ function MailBox() {
             <div className="bg-white rounded-3xl p-10 min-h-screen w-full">
                 <Navbar2 title="กล่องข้อความ" />
                 <div className='mt-10'>
-                    <TableMailbox email={`${session?.user?.email}`}/>
+                    <TableMailbox email={`${session?.user?.email}`} setLoader={setLoader} loader={loader}/>
                 </div>
 
             </div>
-            {loader && (
+            {loader === "wait" && (
                 <div>
                     <Loader />
                 </div>

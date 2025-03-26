@@ -83,11 +83,6 @@ function Login() {
 
             }
 
-            Swal.fire({
-                title: 'เข้าสู่ระบบสำเร็จ',
-                icon: 'success',
-                confirmButtonText: 'ตกลง'
-            })
         } catch (err) {
             console.log(err);
         }
