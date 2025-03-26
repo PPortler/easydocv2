@@ -161,7 +161,7 @@ const TablePage: React.FC<TablePageProps> = ({ dataUser, id }) => {
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
                                 <TableRow>
-                                    {columns.map((column) => (
+                                    {columns.map((column, index) => (
                                         <TableCell
                                             key={column.id}
                                             align={column.align || 'center'}
@@ -181,7 +181,7 @@ const TablePage: React.FC<TablePageProps> = ({ dataUser, id }) => {
                                                 {columns.map((column) => {
                                                     const value = row[column.id];
                                                     return (
-                                                        <TableCell key={column.id} align={column.align || "center"} >
+                                                        <TableCell key={`${row.id}-${column.id}`} align={column.align || "center"}>
                                                             {column.id === "id" ? (
                                                                 <div className="flex gap-1 text-white justify-center">
                                                                     {/* View Icon */}

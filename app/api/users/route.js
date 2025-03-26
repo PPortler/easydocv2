@@ -55,6 +55,8 @@ export async function GET(req) {
     // สร้างผลลัพธ์ที่จะส่งกลับ (ไม่ส่ง password)
     const result = users.map((u) => ({
       name: `${u.firstName} ${u.lastName}`, // รวมชื่อ+นามสกุล
+      firstName: u.firstName,
+      lastName: u.lastName,
       email: u.email,
       phoneNumber: u.phoneNumber,
       role: u.role,

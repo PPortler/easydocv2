@@ -47,7 +47,7 @@ function MyFile() {
     async function getUsers() {
         try {
             const res = await axios.get(`${process.env.NEXT_PUBLIC_BASE_API_URL}/api/users`);
-            setUsers(res.data.users || [])
+            setUsers(res.data || [])
         } catch (err) {
             console.log(err);
         }
