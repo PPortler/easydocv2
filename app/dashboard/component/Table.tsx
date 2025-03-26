@@ -11,17 +11,10 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
-
-interface SentMail {
-    email: string;
-    header: string;
-    type: string;
-    status: string;
-    fromSent: { date: string; time: string; detail: string }[];
-}
+import { Sents } from "@/app/types/sentType";
 
 interface TableProps {
-    dataMail: SentMail[];
+    dataMail: Sents[];
 }
 
 const MailTable: React.FC<TableProps> = ({ dataMail }) => {

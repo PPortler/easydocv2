@@ -18,8 +18,8 @@ function MyFile() {
 
     const [loader, setLoader] = useState<boolean>(false)
     const [mails, setMails] = useState<Sents[]>([])
-    const [mailBox, setMailBoxs] = useState<MailBox[]>([])
-
+    // const [mailBox, setMailBoxs] = useState<MailBox[]>([])
+    
     useEffect(() => {
         if (status === 'loading') return
 
@@ -68,7 +68,7 @@ function MyFile() {
             mergedData.sort((a, b) => {
                 const dateA = new Date(`${a.fromSent[0]?.date} ${a.fromSent[0]?.time}`)
                 const dateB = new Date(`${b.fromSent[0]?.date} ${b.fromSent[0]?.time}`)
-                return dateB - dateA // เรียงจากล่าสุด -> เก่าสุด
+                return dateB.getTime() - dateA.getTime() // เรียงจากล่าสุด -> เก่าสุด
             })
 
             setMails(mergedData)

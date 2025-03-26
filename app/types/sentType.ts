@@ -3,6 +3,7 @@ export interface Sents {
     email: string;
     header: string;
     status: string;
+    type: string;
     fromSent: [{
         email: string,
         time: string,
