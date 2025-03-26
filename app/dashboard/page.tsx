@@ -54,7 +54,7 @@ function MyFile() {
             // รวมข้อมูล mailBox เข้าไปใน mails
             const mergedData: Sents[] = [
                 ...sentMails,
-                ...mailBoxes.map((mail) => ({
+                ...mailBoxes.map((mail: MailBox) => ({
                     id: mail.idSent, // ใช้ idSent แทน id
                     email: mail.fromSent.length > 0 ? mail.fromSent[mail.fromSent.length - 1].email : "", // ใช้ fromSent[ล่าสุด] แทน email
                     header: mail.header,
