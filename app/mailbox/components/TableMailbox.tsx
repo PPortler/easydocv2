@@ -65,7 +65,7 @@ function createData(
     return { user, files, time, date, detail };
 }
 
-function TableMailbox({ email, setLoader, loader }: { email: string, setLoader: React.Dispatch<React.SetStateAction<String>>, loader: string }) {
+function TableMailbox({ email, setLoader, loader }: { email: string, setLoader: React.Dispatch<React.SetStateAction<string>>, loader: string }) {
 
     //get all sent
     const [allMailbox, setAllMailbox] = useState<MailBox[]>([]);

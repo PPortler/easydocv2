@@ -64,7 +64,7 @@ function createData(
 }
 
 
-function TableStatus({ email, setLoader, loader }: { email: string, setLoader: React.Dispatch<React.SetStateAction<String>>, loader: string }) {
+function TableStatus({ email, setLoader, loader }: { email: string, setLoader: React.Dispatch<React.SetStateAction<string>>, loader: string }) {
 
     //get all sent
     const [allSent, setAllsent] = useState<Sents[]>([]);

@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation'
 
 function Status() {
 
-    const [loader, setLoader] = useState<String>('wait');
+    const [loader, setLoader] = useState<string>('wait');
 
     const { status, data: session } = useSession();
     const router = useRouter();
