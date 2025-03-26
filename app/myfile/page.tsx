@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Navbar from "../component/myfile/Navbar";
 import Navbar2 from "../component/myfile/Navbar2";
 import Icon from "@mdi/react";
-import { mdiFileAccount } from "@mdi/js";
+import { mdiFileAccount, mdiDownload } from "@mdi/js";
 import axios from "axios";
 import Loader from "../component/Loader";
 import { Worker, Viewer } from "@react-pdf-viewer/core";
@@ -238,22 +238,27 @@ function MyFile() {
           <div className="mt-10 border p-10 rounded-3xl">
             <p className="text-xl font-medium">ไฟล์เริ่มต้น</p>
             {/* defaultFile for admin */}
-            <div className="grid grid-cols-4 gap-5 mt-5">
-            {defaultFile?.length > 0 && (
-              defaultFile?.map((file, index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between border rounded-xl p-4 bg-gray-100 cursor-pointer"
-                >
-                  <div className="flex gap-3 overflow-hidden">
-                    <Icon path={mdiFileAccount} size={1} />
-                    <p className="text-ellipsis overflow-hidden whitespace-nowrap">{file.fileName}</p>
+            <div className="grid grid-cols-1 gap-3 mt-5">
+              {defaultFile?.length > 0 && (
+                defaultFile?.map((file, index) => (
+                  <div
+                    key={index}
+                    className="flex border rounded-xl p-4 bg-gray-100 cursor-pointer"
+                  >
+                    <div className="flex justify-content-between gap-3 overflow-hidden w-full justify-between">
+                      <div className="flex gap-2 items-center">
+                        <Icon path={mdiFileAccount} size={1} />
+                        <p className="text-ellipsis overflow-hidden whitespace-nowrap">{file.fileName}</p>
+                      </div>
+                      <div className="flex gap-1 items-center ">
+                        <Icon path={mdiDownload} size={1} />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
             </div>
-            <hr className="border my-5" />
+            {/* <hr className="border my-5" />
             <div className="my-5 grid grid-cols-4 gap-5">
               {loader ? (
                 <Loader />
@@ -273,7 +278,7 @@ function MyFile() {
               ) : (
                 <p>ยังไม่มีไฟล์ที่อัพโหลด</p>
               )}
-            </div>
+            </div> */}
           </div>
 
           {isPopupOpen && selectedFile && (
@@ -371,7 +376,7 @@ function MyFile() {
             </div>
           )}
         </div>
-        <AddFile email={session?.user?.email || ""} id={session?.user?.idUser || ""} />
+        {/* <AddFile email={session?.user?.email || ""} id={session?.user?.idUser || ""} /> */}
       </div>
     </>
   );

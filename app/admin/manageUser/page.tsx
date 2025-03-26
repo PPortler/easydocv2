@@ -32,7 +32,7 @@ function MyFile() {
         }
 
         if (session?.user?.role === "user") {
-            router.replace('/myfile')
+            router.replace('/dashboard')
             setLoader(false);
         }
 

@@ -162,7 +162,7 @@ function TableMailbox({ email, setLoader, loader }: { email: string, setLoader: 
                         </div>
                     </div>
                     <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                        <TableContainer sx={{ maxHeight: 440 }} >
+                        <TableContainer sx={{ maxHeight: 1200 }} >
                             <Table stickyHeader aria-label="sticky table">
                                 <TableHead>
                                     <TableRow>

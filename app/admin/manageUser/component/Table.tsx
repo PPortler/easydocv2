@@ -157,7 +157,7 @@ const TablePage: React.FC<TablePageProps> = ({ dataUser, id }) => {
             <hr className='border-black my-2 mt-5' />
             <div className='mt-5'>
                 <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                    <TableContainer sx={{ maxHeight: 440 }}>
+                    <TableContainer sx={{ maxHeight: 1200 }}>
                         <Table stickyHeader aria-label="sticky table">
                             <TableHead>
                                 <TableRow>
@@ -175,13 +175,13 @@ const TablePage: React.FC<TablePageProps> = ({ dataUser, id }) => {
                             <TableBody>
                                 {filteredRows
                                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    .map((row) => {
+                                    .map((row, rowIndex) => {
                                         return (
-                                            <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                                                {columns.map((column) => {
+                                            <TableRow hover role="checkbox" tabIndex={-1} key={`${row.id}-${rowIndex}`}>
+                                                {columns.map((column, colIndex) => {
                                                     const value = row[column.id];
                                                     return (
-                                                        <TableCell key={`${row.id}-${column.id}`} align={column.align || "center"}>
+                                                        <TableCell key={`${row.id}-${column.id}-${colIndex}`} align={column.align || "center"}>
                                                             {column.id === "id" ? (
                                                                 <div className="flex gap-1 text-white justify-center">
                                                                     {/* View Icon */}
@@ -198,7 +198,6 @@ const TablePage: React.FC<TablePageProps> = ({ dataUser, id }) => {
                                                                     <div className="py-1 px-3 border rounded-lg bg-red-400 cursor-pointer">
                                                                         <Icon path={mdiDeleteForever} size={0.7} />
                                                                     </div>
-
                                                                 </div>
                                                             ) : column.format && typeof value === "number" ? (
                                                                 column.format(value)
@@ -212,6 +211,7 @@ const TablePage: React.FC<TablePageProps> = ({ dataUser, id }) => {
                                         );
                                     })}
                             </TableBody>
+
                         </Table>
                     </TableContainer>
                     <TablePagination

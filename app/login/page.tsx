@@ -30,7 +30,7 @@ function Login() {
         if (session?.user?.role === "admin") {
             router.replace('/admin')
         } else if (session?.user?.role?.toLocaleLowerCase() === "user") {
-            router.replace('/myfile')
+            router.replace('/dashboard')
         }
     }, [session, status]);
 
@@ -58,8 +58,8 @@ function Login() {
                     })
 
                     if (!resCheckUser.ok) {
-                        throw new Error("Error fetch api checkuser.")
                         setLoader(false);
+                        throw new Error("Error fetch api checkuser.")
                     }
 
                     const { user } = await resCheckUser.json()
