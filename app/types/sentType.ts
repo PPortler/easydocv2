@@ -4,6 +4,7 @@ export interface Sents {
     header: string;
     status: string;
     type: string;
+    id: string;
     fromSent: [{
         email: string,
         time: string,
